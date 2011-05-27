@@ -6,8 +6,8 @@
         <h2>Keywords</h2>
 
         <ul>
-            <li><a href="<?php echo site_url('keyword/export')?>">Exports</a></li>
-            <li><a href="<?php echo site_url('keyword/statistic')?>">Statistic</a></li>
+            <li><a href="<?php echo site_url('keyword/export') ?>">Exports</a></li>
+            <li><a href="<?php echo site_url('keyword/statistic') ?>">Statistic</a></li>
         </ul>
     </div>
     <div class="block_content">
@@ -17,26 +17,38 @@
                 <tr>
                     <th>photo</th>
                     <th>Status</th>
-                    <td>Followers</td>
-                    <td>&nbsp;</td>
+                    <th>Followers</th>
+                    <th>Sentiment</th>
                 </tr>
             </thead>
 
             <tbody>
-                <tr>
-                    <td>
-                        <img height="48" width="48" src="http://a2.twimg.com/profile_images/1318041145/eb789682db5400aa19f0067ed73e954d_normal.jpg" alt="Aruna Laksana" class="user-profile-link" data-user-id="226111600">
-                    </td>
-                    <td>
-                        <div class="twitter-sender">bhasunjaya</div>
-                        <div class="twitter-text">
-                            Msh to be continued RT @bhasunjaya: 
-                            @junglon ini jadi endingnya gmana sih pssi ini? 
-                            Happy ending apa sad ending? 
-                        </div>
-                    </td>
-                    <td>343</td>
-                    <td class="delete"><a href="#">Delete</a></td>
+                <?php foreach ($searchs['data'] as $r): ?>
+                    <tr class="tr-<?php echo $r->sentiment?>">
+                        <td>
+                            <img height="48" width="48" src="<?php echo $r->profile_image_url ?>" 
+                                 alt="<?php echo $r->screen_name ?>" 
+                                 class="user-profile-link" 
+                                 />
+                        </td>
+                        <td>
+                            <div class="twitter-sender">
+                                <strong><?php echo $r->screen_name ?></strong>
+                                (<?php echo $r->name ?>)</div>
+                            <div class="twitter-text"><?php echo $r->tweet_text ?></div>
+                            <div class="twitter-text"><?php echo $r->created_at ?></div>
+                            <div class="twitter-text">
+                                <span class=""><?php echo sentiment($r->sentiment) ?></span>
+                            </div>
+                        </td>
+                        <td><?php echo $r->followers_count ?></td>
+                        <td class="delete">
+                            <a href="<?php echo site_url('keyword/mark_sentiment/' . $r->tweet_id . '/p') ?>" class="sentiment sentiment-positif">mark this tweet as positive</a>
+                            <a href="<?php echo site_url('keyword/mark_sentiment/' . $r->tweet_id . '/m') ?>" class="sentiment sentiment-negatif">mark this tweet as negative</a>
+                            <a href="<?php echo site_url('keyword/mark_sentiment/' . $r->tweet_id . '/a') ?>" class="sentiment sentiment-ask">mark this tweet as asking</a>
+                            <a href="<?php echo site_url('keyword/mark_sentiment/' . $r->tweet_id . '/n') ?>" class="sentiment sentiment-netral">mark this tweet as neutral</a>
+                        </td>
+                    <?php endforeach; ?>
                 </tr>
             </tbody>
 
@@ -45,16 +57,7 @@
 
         <!-- pagination ends -->
         <div class="pagination right">
-            <a href="#">&laquo;</a>
-
-            <a href="#" class="active">1</a>
-            <a href="#">2</a>
-            <a href="#">3</a>
-            <a href="#">4</a>
-            <a href="#">5</a>
-            <a href="#">6</a>
-
-            <a href="#">&raquo;</a>
+            <?php echo $pagination ?>
         </div>		
         <!-- .pagination ends -->
 

@@ -1168,3 +1168,14 @@ form .block  input.submit.mid:hover { background: url(../images/backends/btnm_.g
 form .block  input.submit.long { width: 165px; background: url(../images/backends/btnb.gif) top center no-repeat; }
 form .block  input.submit.long:hover { background: url(../images/backends/btnb_.gif) top center no-repeat; }
 
+
+/** sentiment */
+.tr-p td{
+    background-color: #cffceb;
+}
+.tr-m td{
+    background-color: #f7e9e9;
+}
+.tr-a td{
+    background-color: #f4f7df;
+}

@@ -6,5 +6,6 @@
 
     <ul id="nav">
         <li><a href="<?php echo site_url('') ?>">Dashboard</a></li>
+        <li><a href="<?php echo site_url('keyword') ?>">Keywords</a></li>
     </ul>
 </div>
