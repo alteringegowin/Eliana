@@ -5,7 +5,7 @@
         <div class="bheadl"></div>
         <div class="bheadr"></div>
 
-        <h2>Accounts</h2>
+        <h2>Keyword: "<?php echo $keyword->keyword?>"</h2>
 
         <ul>
             <li><a href="<?php echo site_url('keyword/archieve') ?>">Back</a></li>
@@ -13,16 +13,14 @@
         </ul>
     </div>
     <div class="block_content">
-
-
         <form action="<?php echo current_url() ?>" method="post">
             <p>
                 <label>From:</label><br>
-                <input type="text" class="text text tiny datepicker hasDatepicker" name="title" value="">
+                <input type="text" class="text tiny datepicker" name="start" value="">
             </p>
             <p>
                 <label>Until:</label><br>
-                <input type="text" class="text text tiny datepicker hasDatepicker" name="title" value="">
+                <input type="text" class="text tiny datepicker" name="end" value="">
             </p>
 
 
@@ -32,9 +30,6 @@
                 <input type="submit" class="submit mid" value="Download">
             </p>
         </form>
-
-
-
     </div>		
     <!-- .block_content ends -->
 

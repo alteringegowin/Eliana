@@ -35,13 +35,13 @@ class keyword_model extends CI_Model {
     function get_keyword($keyword_id) {
         return $this->db->get_where('tweet_keywords', array('id' => $keyword_id))->row();
     }
-    
-    function search_keyword($param=array()){
+
+    function search_keyword($param=array()) {
         $def['keyword'] = '';
         $def['limit'] = 10;
         $def['offset'] = 0;
-        
-        $param = $param+$def;
+
+        $param = $param + $def;
         $offset = $param['offset'];
         $limit = $param['limit'];
 
@@ -49,16 +49,19 @@ class keyword_model extends CI_Model {
         SELECT SQL_CALC_FOUND_ROWS 
             * 
         FROM tweets 
-        WHERE tweet_text  LIKE '%".$this->db->escape_like_str($param['keyword'])."%'
+        WHERE tweet_text  LIKE '%" . $this->db->escape_like_str($param['keyword']) . "%'
         ORDER BY created_at DESC
         LIMIT $offset,$limit 
         ";
-        
+
         $keywords['data'] = $this->db->query($sql)->result();
         $total = $this->db->query('SELECT FOUND_ROWS() as total')->row()->total;
         $keywords['total'] = $total;
         return $keywords;
-        
+    }
+
+    function prepare_download_data($keyword, $from=false, $until=false) {
+       
     }
 
 }
