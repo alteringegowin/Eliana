@@ -21,6 +21,7 @@
         <link rel="stylesheet" href="js/jquery-ui-1.8.9.custom/css/ui-lightness/jquery-ui-1.8.9.custom.css" type="text/css" media="screen" title="" charset="utf-8" />
         <script type="text/javascript" src="js/jquery-ui-1.8.9.custom/js/jquery-1.4.4.min.js"></script>
         <script type="text/javascript" src="js/jquery-ui-1.8.9.custom/js/jquery-ui-1.8.9.custom.min.js"></script>
+        <script type="text/javascript" src="js/jquery.tablesorter.min.js"></script>
         <script type="text/javascript" src="js/global.js"></script>
 
         <?php if ( isset($javascripts) ): ?>

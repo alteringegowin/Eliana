@@ -32,5 +32,7 @@ $(document).ready(function(){
 		
         return false;
     });
+    
+    $(".sortable").tablesorter( {sortList: [[1,0]]}); 
 	
 });
