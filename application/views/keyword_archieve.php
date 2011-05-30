@@ -6,7 +6,7 @@
         <h2>Keywords</h2>
         <ul>
             <li><a href="<?php echo site_url('keyword/export/'.$this->uri->segment(3,0)) ?>">Exports</a></li>
-            <li><a href="<?php echo site_url('keyword/statistic') ?>">Statistic</a></li>
+            <li><a href="<?php echo site_url('keyword/statistic/'.$this->uri->segment(3,0)) ?>">Statistic</a></li>
         </ul>
     </div>
     <div class="block_content">

@@ -56,10 +56,10 @@ class Keyword extends CI_Controller {
                 ORDER BY created_at DESC
                 ";
             $this->load->dbutil();
-            $query = $this->db->query($sql,array($start, $end) );
-            $csvdata =  $this->dbutil->csv_from_result($query);
-            $filename = $keyword->keyword.' from '.$start.' sd '.$end;
-            force_download(url_title($filename).'.csv',$csvdata);
+            $query = $this->db->query($sql, array($start, $end));
+            $csvdata = $this->dbutil->csv_from_result($query);
+            $filename = $keyword->keyword . ' from ' . $start . ' sd ' . $end;
+            force_download(url_title($filename) . '.csv', $csvdata);
         }
 
 
@@ -72,7 +72,21 @@ class Keyword extends CI_Controller {
         $this->load->view('body', $this->tpl);
     }
 
+    /**
+     * 
+     * @todo memilih periode
+     * @param type $keyword_id 
+     */
     function statistic($keyword_id=0) {
+        $keyword = $this->keyword->get_keyword($keyword_id);
+        $def_start = date('Y-m-d', mktime(0, 0, 0, date('m'), 1, date('Y')));
+        $start = $this->uri->segment(4, $def_start);
+        $end = $this->uri->segment(5, date('Y-m-d', mktime(0, 0, 0, date('m') + 1, 1, date('Y'))));
+        $stats = $this->keyword->get_statistic_keyword($keyword->keyword, $start, $end);
+
+        $this->tpl['stats'] = $stats;
+        $this->tpl['keyword'] = $keyword;
+        $this->tpl['keyword_id'] = $keyword_id;
         $this->tpl['styles'][] = 'css/visualize.css';
         $this->tpl['javascripts'][] = 'js/jquery.visualize.js';
         $this->tpl['javascripts'][] = 'js/jquery.visualize.tooltip.js';
@@ -84,8 +98,15 @@ class Keyword extends CI_Controller {
     /**
      * cloud word
      */
-    function cloud() {
-        echo 'cloud';
+    function cloud($keyword_id) {
+
+        $keyword = $this->keyword->get_keyword($keyword_id);
+        $def_start = date('Y-m-d', mktime(0, 0, 0, date('m'), 1, date('Y')));
+        $start = $this->uri->segment(4, $def_start);
+        $end = $this->uri->segment(5, date('Y-m-d', mktime(0, 0, 0, date('m') + 1, 1, date('Y'))));
+        $words = $this->keyword->get_cloud_keyword($keyword->keyword, $start, $end);
+        xdebug($words);
+
         $this->tpl['content'] = $this->load->view('keyword_cloud', $this->tpl, true);
         $this->load->view('body', $this->tpl);
     }

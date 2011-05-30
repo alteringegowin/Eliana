@@ -60,8 +60,53 @@ class keyword_model extends CI_Model {
         return $keywords;
     }
 
-    function prepare_download_data($keyword, $from=false, $until=false) {
-       
+    function get_statistic_keyword($keyword, $start, $end) {
+        $sql = "
+        SELECT 
+        count(*) as total_tweets, 
+        COUNT(DISTINCT screen_name) AS total_accounts,
+        DATE_FORMAT(created_at,'%Y-%m-%d %H')  as tanggal
+        FROM `tweets` 
+        WHERE 
+            `tweet_text` LIKE '%" . $this->db->escape_like_str($keyword) . "%'
+            AND created_at BETWEEN ? AND ?
+        GROUP BY tanggal            
+        ";
+
+        $stats = $this->db->query($sql, array($start, $end))->result();
+        $d['tweets'] = array();
+        $d['acc'] = array();
+        $d['tanggal'] = array();
+        foreach ($stats as $r) {
+            $d['tweet'][] = $r->total_tweets;
+            $d['acc'][] = $r->total_accounts;
+            $d['tanggal'][] = $r->tanggal;
+        }
+        return $d;
+    }
+
+    function get_cloud_keyword($keyword, $start, $end) {
+        $sql = "
+        SELECT 
+        tweet_text
+        FROM `tweets` 
+        WHERE 
+            `tweet_text` LIKE '%" . $this->db->escape_like_str($keyword) . "%'
+            AND created_at BETWEEN ? AND ?
+        ";
+
+        $stats = $this->db->query($sql, array($start, $end))->result();
+        $str = '';
+        foreach ($stats as $r) {
+            $str .= " " . $r->tweet_text;
+        }
+        $words = array_count_values(str_word_count($str, 1,'#@'));
+        asort($words);
+        return array_reverse($words);
+    }
+
+    function process_words($string) {
+        
     }
 
 }
