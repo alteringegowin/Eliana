@@ -42,8 +42,9 @@ class Tweet_test extends CI_Controller {
 
     function auth() {
         $tokens = $this->tweet->get_tokens();
-        $user = $this->tweet->call('get', 'account/verify_credentials');
-        xdebug($user);
+        $param = array('screen_name'=>'ndorokakung');
+        $user = $this->tweet->call('get', '/users/lookup',$param);
+        xdebug($user->id_str.' '.$user->screen_name);
     }
 
 }

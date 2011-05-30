@@ -16,23 +16,39 @@
         <table cellpadding="0" cellspacing="0" width="100%" class="sortable">
             <thead>
                 <tr>
-                    <th>Page title</th>
-                    <th>Status</th>
-                    <th>Date created</th>
-                    <th>Author</th>
-                    <td>&nbsp;</td>
+                    <th>&nbsp;</th>
+                    <th>Data</th>
+                    <th>Followers</th>
+                    <th>Last Update</th>
                 </tr>
             </thead>
 
             <tbody>
-                <tr>
-                    <td><a href="#">Home</a></td>
-                    <td>Published</td>
-                    <td>20.03.2010</td>
-                    <td><a href="#">John Doe</a></td>
+                <?php foreach ($followeds['data'] as $r): ?>
+                    <?php if ( $r->description ): ?>
+                        <tr>
+                            <td><img src="<?php echo $r->profile_image_url ?>"/></td>
+                            <td>
+                                <strong><?php echo $r->screen_name ?> (<?php echo $r->name ?>)</strong>
+                                <div>
+                                    <?php echo $r->description ?>
+                                </div>
 
-                    <td class="delete"><a href="#">Delete</a></td>
-                </tr>
+                            </td>
+                            <td><?php echo $r->followers_count ?></td>
+                            <td><?php echo date('Y-m-d H:i', mysql_to_unix($r->last_update)) ?></td>
+                        </tr>
+                    <?php else: ?>
+                        <tr>
+                            <td>not available yet</td>
+                            <td>
+                                <strong><?php echo $r->screen_name ?> </strong>
+                            </td>
+                            <td>not available yet</td>
+                            <td>not available yet</td>
+                        </tr>
+                    <?php endif; ?>
+                <?php endforeach; ?>
             </tbody>
 
         </table>
@@ -40,16 +56,7 @@
 
         <!-- pagination ends -->
         <div class="pagination right">
-            <a href="#">&laquo;</a>
-
-            <a href="#" class="active">1</a>
-            <a href="#">2</a>
-            <a href="#">3</a>
-            <a href="#">4</a>
-            <a href="#">5</a>
-            <a href="#">6</a>
-
-            <a href="#">&raquo;</a>
+            <?php echo $pagination; ?>
         </div>		
         <!-- .pagination ends -->
 
