@@ -42,7 +42,8 @@ class Tweet_test extends CI_Controller {
 
     function auth() {
         $tokens = $this->tweet->get_tokens();
-        $param = array('screen_name'=>'ndorokakung');
+        //pasarsapi, , , , 
+        $param = array('screen_name'=>'miund');
         $user = $this->tweet->call('get', '/users/lookup',$param);
         xdebug($user->id_str.' '.$user->screen_name);
     }

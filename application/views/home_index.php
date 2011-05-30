@@ -4,12 +4,6 @@
         <div class="bheadr"></div>
 
         <h2>Pages</h2>
-
-        <ul>
-            <li><a href="#">Edit pages</a></li>
-            <li><a href="#">Add page</a></li>
-
-        </ul>
     </div>
     <div class="block_content">
         <!-- table -->
@@ -29,7 +23,7 @@
                         <tr>
                             <td><img src="<?php echo $r->profile_image_url ?>"/></td>
                             <td>
-                                <strong><?php echo $r->screen_name ?> (<?php echo $r->name ?>)</strong>
+                                <strong><a href="<?php echo site_url('tweep/index/' . $r->user_id) ?>"><?php echo $r->screen_name ?> (<?php echo $r->name ?>)</a></strong>
                                 <div>
                                     <?php echo $r->description ?>
                                 </div>
