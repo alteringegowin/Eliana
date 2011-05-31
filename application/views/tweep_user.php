@@ -6,6 +6,7 @@
         <h2>User : <?php echo $tweep->screen_name ?></h2>
         <ul>
             <li><a href="<?php echo site_url('tweep/index/' . $tweep->user_id) ?>">Status</a></li>
+            <li><a href="<?php echo site_url('tweep/keyword/' . $tweep->user_id) ?>">WordCloud</a></li>
             <li><a href="<?php echo site_url('tweep/mention/' . $tweep->user_id) ?>">Mention</a></li>
             <li class="active">User</li>
 

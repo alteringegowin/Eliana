@@ -23,6 +23,38 @@ class Home extends CI_Controller {
         $this->load->view('body', $this->tpl);
     }
 
+    function backup() {
+        $this->load->view('__backup', $this->tpl);
+    }
+
+    function test() {
+          $tweet_id = '75497305138139136';
+          $this->db->where('tweet_id', $tweet_id);
+          $row = $this->db->get('json_cache')->row();
+          $tweet_object = unserialize(base64_decode($row->raw_tweet));
+          xdebug($tweet_object); die;
+
+
+        $this->db->limit(5000, 15000);
+        $this->db->where('parsed', 1);
+        $this->db->order_by('cache_id', 'ASC');
+        $results = $this->db->get('json_cache')->result();
+        $all = array();
+        $i = 0;
+        foreach ($results as $row) {
+            $tweet_object = unserialize(base64_decode($row->raw_tweet));
+            if ( $tweet_object->in_reply_to_status_id_str && $tweet_object->in_reply_to_user_id_str ) {
+                $d['in_reply_to_status_id'] = $tweet_object->in_reply_to_status_id_str;
+                $d['in_reply_to_user_id'] = $tweet_object->in_reply_to_user_id_str;
+                //$d['text'] = $tweet_object->text;
+                $this->db->where('tweet_id', $row->tweet_id);
+                $this->db->update('tweets', $d);
+                $i++;
+            }
+        }
+        echo $i;
+    }
+
 }
 
 /* End of file welcome.php */

@@ -12,9 +12,6 @@
         </ul>
     </div>
     <div class="block_content">
-        <ul>
-            <li>Total Reach: <?php echo $total ?></li>
-        </ul>
         <!-- table -->
         <table cellpadding="0" cellspacing="0" width="100%">
             <thead>
@@ -27,7 +24,7 @@
             </thead>
             <tbody>
                 <?php $total = 0; ?>
-                <?php foreach ($retweet as $r): ?>
+                <?php foreach ($replys as $r): ?>
                     <?php $total += $r->followers_count; ?>
                     <tr>
                         <td><img src="<?php echo $r->profile_image_url ?>"/></td>

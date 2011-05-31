@@ -43,7 +43,7 @@ class Tweet_test extends CI_Controller {
     function auth() {
         $tokens = $this->tweet->get_tokens();
         //pasarsapi, , , , 
-        $param = array('screen_name'=>'miund');
+        $param = array('screen_name'=>'chikastuff');
         $user = $this->tweet->call('get', '/users/lookup',$param);
         xdebug($user->id_str.' '.$user->screen_name);
     }

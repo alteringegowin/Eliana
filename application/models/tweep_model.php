@@ -135,7 +135,7 @@ class tweep_model extends CI_Model {
         $text = str_replace('RT', ' rt ', $text);
         $text = strtolower($text);
         $text = str_replace('tidak ', 'tidak-', $text);
-        $tandabaca = array('.', ',', '!', "\r\n", "\n", "\r", '$', '%','&',
+        $tandabaca = array('.', ',', '!', "\r\n", "\n", "\r", '$', '%', '&',
             '^', ')', '(', '+', '|', ':', ';', '/', '?', '=', "\""
         );
         $text = str_replace($tandabaca, ' ', $text);
@@ -176,6 +176,10 @@ class tweep_model extends CI_Model {
         } else {
             return $index;
         }
+    }
+
+    function get_reply_list($tweet_id) {
+        return $this->db->get_where('tweets', array('in_reply_to_status_id' => $tweet_id))->result();
     }
 
 }

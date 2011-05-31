@@ -20,6 +20,7 @@ class Tweep extends CI_Controller {
         if ( !$this->uri->segment(3) ) {
             redirect('home');
         }
+        $this->tpl['tweep'] = $this->tweep->get_tweep($this->uri->segment(3));
     }
 
     function index($user_id='', $offset=0) {
@@ -27,7 +28,6 @@ class Tweep extends CI_Controller {
         $limit = 10;
         $acc = $this->tweep->get_tweep_status($user_id, $offset, $limit);
         $this->tpl['acc'] = $acc;
-        $this->tpl['tweep'] = $this->tweep->get_tweep($user_id);
         $this->tpl['pagination'] = create_pagination('/tweep/index/' . $user_id, $acc['total'], $limit, 4);
         $this->tpl['content'] = $this->load->view('tweep_index', $this->tpl, true);
         $this->load->view('body', $this->tpl);
@@ -35,7 +35,6 @@ class Tweep extends CI_Controller {
 
     function mention($user_id='', $offset=0) {
         $limit = 10;
-        $this->tpl['tweep'] = $this->tweep->get_tweep($user_id);
         $this->tpl['mention'] = $this->tweep->get_mention($user_id, $offset, $limit);
         $this->tpl['pagination'] = create_pagination('/tweep/mention/' . $user_id, $this->tpl['mention'] ['total'], $limit, 4);
         $this->tpl['content'] = $this->load->view('tweep_mention', $this->tpl, true);
@@ -47,7 +46,6 @@ class Tweep extends CI_Controller {
         $mentioneds = $this->tweep->get_top_mentioned($user_id, 20);
         $this->tpl['mentions'] = $mentions;
         $this->tpl['mentioneds'] = $mentioneds;
-        $this->tpl['tweep'] = $this->tweep->get_tweep($user_id);
         $this->tpl['content'] = $this->load->view('tweep_user', $this->tpl, true);
         $this->load->view('body', $this->tpl);
     }
@@ -61,7 +59,7 @@ class Tweep extends CI_Controller {
         $this->load->view('body', $this->tpl);
     }
 
-    function rt($tweet_id) {
+    function rt($user_id,$tweet_id) {
         $this->load->helper('date');
         $tweet = $this->tweep->get_tweet($tweet_id);
 
@@ -71,6 +69,18 @@ class Tweep extends CI_Controller {
         $this->tpl['tweet'] = $tweet;
         $this->tpl['retweet'] = $retweet;
         $this->tpl['content'] = $this->load->view('tweet_rt', $this->tpl, true);
+        $this->load->view('body', $this->tpl);
+    }
+
+    function reply($user_id,$tweet_id) {
+        $this->load->helper('date');
+        $tweet = $this->tweep->get_tweet($tweet_id);
+        
+        $replys = $this->tweep->get_reply_list($tweet_id);
+
+        $this->tpl['tweet'] = $tweet;
+        $this->tpl['replys'] = $replys;
+        $this->tpl['content'] = $this->load->view('tweet_reply', $this->tpl, true);
         $this->load->view('body', $this->tpl);
     }
 
@@ -96,5 +106,6 @@ class Tweep extends CI_Controller {
         $this->tpl['content'] = $this->load->view('tweep_keyword', $this->tpl, true);
         $this->load->view('body', $this->tpl);
     }
+    
 
 }

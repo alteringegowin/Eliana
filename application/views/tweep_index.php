@@ -6,6 +6,7 @@
         <h2>Last Status: <?php echo $tweep->screen_name ?></h2>
         <ul>
             <li class="active">Status</li>
+            <li><a href="<?php echo site_url('tweep/keyword/' . $tweep->user_id) ?>">WordCloud</a></li>
             <li><a href="<?php echo site_url('tweep/mention/' . $tweep->user_id) ?>">Mention</a></li>
             <li><a href="<?php echo site_url('tweep/user/' . $tweep->user_id) ?>">User</a></li>
         </ul>
@@ -21,6 +22,7 @@
                     <th>Followers</th>
                     <th>Growth Efek</th>
                     <th>RT Count</th>
+                    <th>Reply Count</th>
                 </tr>
             </thead>
 
@@ -28,6 +30,7 @@
                 <?php $now = 0; ?>
                 <?php foreach ($acc['data'] as $r): ?>
                     <?php
+                    $count_reply = count_reply($r->tweet_id);
                     if ( $now ):
                         $selisih = $now - $r->followers_count;
                         $now = $r->followers_count;
@@ -54,11 +57,12 @@
                         <td>
                             <?php $cRT = count_retweeted($r->tweet_text, $r->screen_name) ?>
                             <?php if ( $cRT ): ?>
-                                <a href="<?php echo site_url('tweep/rt/' . $r->tweet_id) ?>"><?php echo $cRT ?></a>
+                                <a href="<?php echo site_url('tweep/rt/' . $tweep->user_id . '/' . $r->tweet_id) ?>"><?php echo $cRT ?></a>
                             <?php else: ?>
                                 0
                             <?php endif; ?>
                         </td>
+                        <td><a href="<?php echo site_url('tweep/reply/' . $tweep->user_id . '/' . $r->tweet_id) ?>"><?php echo $count_reply ? $count_reply->total : 0 ?></a></td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
