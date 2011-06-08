@@ -2,50 +2,70 @@
     <div class="block_head">
         <div class="bheadl"></div>
         <div class="bheadr"></div>
-
         <h2>Keywords</h2>
-
-        <ul>
-            <li><a href="#">Add Keyword</a></li>
-
-        </ul>
     </div>
     <div class="block_content">
-        <!-- table -->
-        <table cellpadding="0" cellspacing="0" width="100%" class="sortable">
-            <thead>
-                <tr>
-                    <th>Keywords</th>
-                    <th>Status</th>
-                    <td>&nbsp;</td>
-                </tr>
-            </thead>
+        <form id="frm-keyword-submit" action="<?php echo site_url('keyword/filter_keyword') ?>" method="post">
+            <p>
+                <label>From:</label>
+                <?php echo form_dropdown('keyword', $keywords) ?>
+            </p>
+            <p>
+                <label>From:</label>
+                <input type="text" class="text tiny datepicker" name="start" value="">
+                <label>Until:</label>
+                <input type="text" class="text tiny datepicker" name="end" value="">
+                <input type="submit" class="submit mid" id="btn-keyword-submit" value="Show">
+            </p>
+        </form>
 
-            <tbody>
-                <?php foreach ($keywords['data'] as $r): ?>
-                    <tr>
-                        <td><a href="<?php echo site_url('keyword/archieve/' . $r->id) ?>"><?php echo $r->keyword ?></a></td>
-                        <td><?php echo $r->keyword_date ?></td>
-                        <td class="delete"><a href="#">Delete</a></td>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
-
-        </table>
-        <!-- /table -->
-
-        <!-- pagination ends -->
-        <div class="pagination right">
-            <?php echo $pagination ?>
-        </div>		
-        <!-- .pagination ends -->
+        <hr/>
+        <div id="loading">loading...</div>
+        <div id="statistic" class="ui-widget">
+            <div class="statistic-num ui-button ui-widget ui-state-default ui-corner-all">
+                <div>Total Tweet Found</div>
+                <div class="number" id="number-tweet-found"></div>
+            </div>
+            <div class="statistic-num ui-button ui-widget ui-state-default ui-corner-all">
+                <div>Total User Participate</div>
+                <div class="number" id="number-user-participate"></div>
+            </div>
+            <div class="statistic-num ui-button ui-widget ui-state-default ui-corner-all">
+                <div>Total Impression</div>
+                <div class="number" id="number-tweet-impression"></div>
+            </div>
+            <div class="clear"></div>
 
 
+        </div>
+
+        <div id="tweet-stat-user" class="tweet-reg"></div>
+        <div id="tweet-cloud" class="tweet-reg"></div>
+        <div id="tweet-freq" class="tweet-reg">
+            <table class="stats" rel="line" cellpadding="0" cellspacing="0" width="100%"> 
+                <thead> 
+                    <tr> 
+                        <td>&nbsp;</td> 
+                    </tr> 
+                </thead> 
+
+                <tbody> 
+                    <tr> 
+                        <th>Page views</th> 
+                    </tr> 
+
+                    <tr> 
+                        <th>Unique visitors</th>								
+                    </tr> 
+                </tbody> 
+            </table> 
+
+        </div>
 
     </div>		
-    <!-- .block_content ends -->
+    <!-- .block_content ends --> 
 
-    <div class="bendl"></div>
-    <div class="bendr"></div>
+    <div class="bendl"></div> 
+    <div class="bendr"></div> 
 
-</div>		
+</div>

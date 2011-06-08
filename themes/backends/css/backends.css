@@ -1184,3 +1184,10 @@ form .block  input.submit.long:hover { background: url(../images/backends/btnb_.
 .tr-a td{
     background-color: #f4f7df;
 }
+
+
+#statistic{padding:8px;margin:8px; text-align: center;}
+#statistic .statistic-num{float:left;width:180px;text-align: right;margin-left:20px;padding:4px;cursor: default;}
+#statistic .statistic-num .number{font-weight: bold;font-size: 1.6em;}
+
+.tweet-reg{padding-top:20px;padding-top:8px;}

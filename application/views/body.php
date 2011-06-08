@@ -18,9 +18,9 @@
             <?php endforeach ?>
         <?php endif; ?>
 
-        <link rel="stylesheet" href="js/jquery-ui-1.8.9.custom/css/ui-lightness/jquery-ui-1.8.9.custom.css" type="text/css" media="screen" title="" charset="utf-8" />
-        <script type="text/javascript" src="js/jquery-ui-1.8.9.custom/js/jquery-1.4.4.min.js"></script>
-        <script type="text/javascript" src="js/jquery-ui-1.8.9.custom/js/jquery-ui-1.8.9.custom.min.js"></script>
+        <link rel="stylesheet" href="js/jquery-ui/css/flick/jquery-ui.css" type="text/css" media="screen" title="" charset="utf-8" />
+        <script type="text/javascript" src="js/jquery-ui/js/jquery-1.5.1.min.js"></script>
+        <script type="text/javascript" src="js/jquery-ui/js/jquery-ui-1.8.13.custom.min.js"></script>
         <script type="text/javascript" src="js/jquery.tablesorter.min.js"></script>
         <script type="text/javascript" src="js/global.js"></script>
 
