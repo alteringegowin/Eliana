@@ -76,16 +76,6 @@ class Keyword extends CI_Controller {
         $this->load->view('keyword_statistic', $this->tpl);
     }
 
-    /*
-      function filter_keyword() {
-      $param['keyword'] = $this->input->post('keyword', 1);
-      $param['start'] = $this->input->post('start', 1);
-      $param['end'] = $this->input->post('end', 1);
-      $this->tpl['filters'] = $this->keyword->search_keyword($param);
-      }
-     * 
-     */
-
     function get_freq() {
         $keyword = $this->input->post('keyword', 1);
         $start = $this->input->post('start', 1);

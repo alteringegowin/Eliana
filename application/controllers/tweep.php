@@ -14,6 +14,7 @@ class Tweep extends CI_Controller {
      */
     function __construct() {
         parent::__construct();
+        $this->load->helper('time');
         $this->tpl = array();
         $this->tpl['content'] = '';
         $this->load->model('tweep_model', 'tweep');
@@ -33,6 +34,18 @@ class Tweep extends CI_Controller {
         $this->load->view('body', $this->tpl);
     }
 
+    function statistic($user_id) {
+
+        $this->tpl['user_id'] = $user_id;
+        $this->tpl['styles'][] = 'css/wordcloud.css';
+        $this->tpl['styles'][] = 'css/visualize.css';
+        $this->tpl['javascripts'][] = 'js/jquery.visualize.js';
+        $this->tpl['javascripts'][] = 'js/jquery.visualize.tooltip.js';
+        $this->tpl['javascripts'][] = 'js/tweep.statistic.js';
+        $this->tpl['content'] = $this->load->view('tweep_statistic', $this->tpl, true);
+        $this->load->view('body', $this->tpl);
+    }
+
     function mention($user_id='', $offset=0) {
         $limit = 10;
         $this->tpl['mention'] = $this->tweep->get_mention($user_id, $offset, $limit);
@@ -49,8 +62,8 @@ class Tweep extends CI_Controller {
         $this->tpl['content'] = $this->load->view('tweep_user', $this->tpl, true);
         $this->load->view('body', $this->tpl);
     }
-    
-    function growth($user_id){
+
+    function growth($user_id) {
         
     }
 
@@ -88,27 +101,40 @@ class Tweep extends CI_Controller {
         $this->load->view('body', $this->tpl);
     }
 
-    function keyword($user_id) {
+    function get_growth($user_id) {
         $start = $this->input->post('start');
         $end = $this->input->post('end');
-        $cloud = '';
-        $keywords = array();
-        if ( $start && $end ) {
-            $keywords = $this->tweep->get_cloud_keyword($user_id, $start, $end);
-            $this->load->library('wordcloud');
-            $tags = array_slice($keywords, 0, 50);
-            foreach ($tags as $r) {
-                $this->wordcloud->addWord($r['word'], $r['count']);
-            }
-            $cloud = $this->wordcloud->showCloud();
-        }
 
-        $this->tpl['keywords'] = $keywords;
-        $this->tpl['cloud'] = $cloud;
-        $this->tpl['styles'][] = 'css/wordcloud.css';
-        $this->tpl['javascripts'][] = 'js/tweep.keyword.js';
-        $this->tpl['content'] = $this->load->view('tweep_keyword', $this->tpl, true);
-        $this->load->view('body', $this->tpl);
+        $growth = $this->tweep->get_growth($user_id, $start, $end);
+        $this->tpl['growth'] = $growth;
+        $this->load->view('tweet_get_growth', $this->tpl);
+    }
+
+    function get_rt($user_id) {
+        $start = $this->input->post('start');
+        $end = $this->input->post('end');
+        $screen_name = $this->tpl['tweep']->screen_name;
+
+        $rt = $this->tweep->count_retweet_per_tanggal($screen_name, $start, $end);
+        $this->tpl['rt'] = $rt;
+        $this->load->view('tweep_get_rt', $this->tpl);
+    }
+
+    /**
+     * menghasilkan cloud
+     */
+    function get_cloud($user_id) {
+        $this->load->library('wordcloud');
+        $start = $this->input->post('start', 1);
+        $end = $this->input->post('end', 1);
+
+        $keywords = $this->tweep->get_cloud_keyword($user_id, $start, $end);
+        $tags = array_slice($keywords, 0, 100);
+        foreach ($tags as $r) {
+            $this->wordcloud->addWord($r['word'], $r['count']);
+        }
+        $this->tpl['cloud'] = $this->wordcloud->showCloud();
+        $this->load->view('tweep_get_cloud', $this->tpl);
     }
 
 }

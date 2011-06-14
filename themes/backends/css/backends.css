@@ -1191,3 +1191,7 @@ form .block  input.submit.long:hover { background: url(../images/backends/btnb_.
 #statistic .statistic-num .number{font-weight: bold;font-size: 1.6em;}
 
 .tweet-reg{padding-top:20px;padding-top:8px;}
+
+.reg{padding-bottom: 30px;padding-top: 10px; }
+
+.block_content h2{border-bottom: solid 1px #888}

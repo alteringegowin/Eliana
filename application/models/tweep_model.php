@@ -106,32 +106,33 @@ class tweep_model extends CI_Model {
     }
 
     function get_cloud_keyword($user_id, $start, $end) {
+        $RT = $this->get_tweep($user_id);
         $sql = "
         SELECT 
         tweet_text
         FROM `tweets` 
         
         WHERE 
-            user_id = ?
+            user_id = ? 
             AND created_at BETWEEN ? AND ?
         ";
-
         $stats = $this->db->query($sql, array($user_id, $start, $end))->result();
+
         $str = '';
         foreach ($stats as $r) {
             $str .= " " . $r->tweet_text;
         }
-
-        $words = $this->process_words($str);
+        
+        $forbidden = array($RT->screen_name,'yang', 'kepada', 'http', 'cont', 'dengan', 
+            'oleh',
+            'kita', 'kamu', 'saya', 'tapi', 'this', 'that');
+        $words = $this->process_words($str,$forbidden);
 
         return array_reverse($words);
     }
 
     function process_words($text, $forbidden=array(), $min_length=4) {
         $index = array();
-        $forbidden = array('yang', 'kepada', 'http', 'cont', 'dengan', 'oleh',
-            'kita', 'kamu', 'saya', 'tapi'
-        );
         $text = str_replace('RT', ' rt ', $text);
         $text = strtolower($text);
         $text = str_replace('tidak ', 'tidak-', $text);
@@ -170,7 +171,6 @@ class tweep_model extends CI_Model {
         }
 
         if ( $index ) {
-
             usort($index, "cmp");
             return($index);
         } else {
@@ -188,8 +188,7 @@ class tweep_model extends CI_Model {
             `user_id`,
             `screen_name`,
             date(`created_at`) as tgl,
-            MAX(`followers_count`),
-            count(tweet_id) as tweetss
+            MAX(`followers_count`) as followers
         FROM `tweets`
         WHERE 
             `user_id` = ?
@@ -198,6 +197,30 @@ class tweep_model extends CI_Model {
         ORDER BY tgl ASC
         ";
         $stats = $this->db->query($sql, array($user_id, $start, $end))->result();
+        return $stats;
+    }
+
+    function count_retweet_per_tanggal($screen_name, $start, $end) {
+
+        $RT = 'RT @' . $screen_name;
+
+        $sql = "
+        SELECT 
+            DATE(  `created_at` ) AS tanggal, 
+            COUNT(  `tweet_id` ) AS tweet, 
+            COUNT( DISTINCT  `user_id` ) AS users, 
+            SUM(  `followers_count` ) AS followers
+        FROM `tweets` 
+        WHERE 
+            `tweet_text` LIKE '%" . $this->db->escape_like_str($RT) . " %'
+            AND `screen_name` != ?
+            AND created_at BETWEEN ? AND ?
+        GROUP BY tanggal
+        ORDER BY tanggal ASC
+            
+        ";
+        $stats = $this->db->query($sql, array($screen_name, $start, $end))->result();
+        return $stats;
     }
 
 }

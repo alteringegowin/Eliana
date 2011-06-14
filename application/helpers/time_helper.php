@@ -1,11 +1,11 @@
 <?php
-if ( !defined('BASEPATH') ) exit ( 'No direct script access allowed' );
+if ( !defined('BASEPATH') )
+    exit('No direct script access allowed');
 
 /**
  * getting list of day for dropdown
  * @return array 
  */
-
 function list_days() {
     $days[''] = 'D';
 
@@ -40,6 +40,11 @@ function list_months() {
     );
 }
 
+function get_bulan($int_month) {
+    $months = list_months();
+    return isset($months[$int_month]) ? $months[$int_month] : $int_month;
+}
+
 /**
  * outputs an array of the last 100 years
  * 
@@ -55,6 +60,7 @@ function list_years_past($quantity = 100) {
 
     return $years;
 }
+
 /**
  * outputs an array of the next 10 years
  * 
@@ -102,7 +108,6 @@ function list_minutes() {
 
     return $minutes;
 }
-
 
 /* End of file time_helper.php */
 /* Location: ./application/helpers/time_helper.php */

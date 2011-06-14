@@ -33,13 +33,11 @@ $(function () {
             
             // Web stats
             $('table.stats').each(function() {
-		
                 if($(this).attr('rel')) {
                     var statsType = $(this).attr('rel');
                 } else {
                     var statsType = 'area';
                 }
-		
                 var chart_width = ($(this).parent('div').width()) - 60;
 		
 				

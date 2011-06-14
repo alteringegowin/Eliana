@@ -112,7 +112,7 @@ class keyword_model extends CI_Model {
     function process_words($text, $forbidden=array(), $min_length=4) {
         $index = array();
         $forbidden = array('yang', 'kepada', 'http', 'cont', 'dengan', 'oleh',
-            'kita', 'kamu', 'saya', 'tapi', 'this', 'that'
+            'kita', 'kamu', 'saya', 'tapi', 'this', 'that','lockerz'
         );
         $text = str_replace('RT', ' rt ', $text);
         $text = strtolower($text);
