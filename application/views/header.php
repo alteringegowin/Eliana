@@ -8,5 +8,6 @@
         <li><a href="<?php echo site_url('') ?>">Dashboard</a></li>
         <li><a href="<?php echo site_url('keyword') ?>">Keywords</a></li>
         <li><a href="<?php echo site_url('tweep') ?>">Tweep</a></li>
+        <li><a href="<?php echo site_url('engine') ?>">Engine</a></li>
     </ul>
 </div>

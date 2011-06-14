@@ -182,4 +182,22 @@ class tweep_model extends CI_Model {
         return $this->db->get_where('tweets', array('in_reply_to_status_id' => $tweet_id))->result();
     }
 
+    function get_growth($user_id, $start, $end) {
+        $sql = "
+        SELECT 
+            `user_id`,
+            `screen_name`,
+            date(`created_at`) as tgl,
+            MAX(`followers_count`),
+            count(tweet_id) as tweetss
+        FROM `tweets`
+        WHERE 
+            `user_id` = ?
+            AND created_at BETWEEN ? AND ?
+        GROUP BY `tgl` 
+        ORDER BY tgl ASC
+        ";
+        $stats = $this->db->query($sql, array($user_id, $start, $end))->result();
+    }
+
 }

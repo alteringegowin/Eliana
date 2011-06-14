@@ -43,9 +43,10 @@ class Tweet_test extends CI_Controller {
     function auth() {
         $tokens = $this->tweet->get_tokens();
         //pasarsapi, , , , 
-        $param = array('screen_name'=>'chikastuff');
-        $user = $this->tweet->call('get', '/users/lookup',$param);
-        xdebug($user->id_str.' '.$user->screen_name);
+        $param = array();
+        $user = $this->tweet->call('GET', 'statuses/home_timeline', $param);
+        //$user = $this->tweet->call('get', '/statuses/sjow/retweeted_by/ids');
+        xdebug($user);
     }
 
 }

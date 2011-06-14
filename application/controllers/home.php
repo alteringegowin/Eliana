@@ -28,11 +28,11 @@ class Home extends CI_Controller {
     }
 
     function test() {
-          $tweet_id = '75497305138139136';
-          $this->db->where('tweet_id', $tweet_id);
-          $row = $this->db->get('json_cache')->row();
-          $tweet_object = unserialize(base64_decode($row->raw_tweet));
-          xdebug($tweet_object); die;
+        $tweet_id = '75497305138139136';
+        $this->db->where('tweet_id', $tweet_id);
+        $row = $this->db->get('json_cache')->row();
+        $tweet_object = unserialize(base64_decode($row->raw_tweet));
+        xdebug($tweet_object); die;
 
 
         $this->db->limit(5000, 15000);

@@ -49,6 +49,10 @@ class Tweep extends CI_Controller {
         $this->tpl['content'] = $this->load->view('tweep_user', $this->tpl, true);
         $this->load->view('body', $this->tpl);
     }
+    
+    function growth($user_id){
+        
+    }
 
     /**
      * @deprecated
@@ -59,7 +63,7 @@ class Tweep extends CI_Controller {
         $this->load->view('body', $this->tpl);
     }
 
-    function rt($user_id,$tweet_id) {
+    function rt($user_id, $tweet_id) {
         $this->load->helper('date');
         $tweet = $this->tweep->get_tweet($tweet_id);
 
@@ -72,10 +76,10 @@ class Tweep extends CI_Controller {
         $this->load->view('body', $this->tpl);
     }
 
-    function reply($user_id,$tweet_id) {
+    function reply($user_id, $tweet_id) {
         $this->load->helper('date');
         $tweet = $this->tweep->get_tweet($tweet_id);
-        
+
         $replys = $this->tweep->get_reply_list($tweet_id);
 
         $this->tpl['tweet'] = $tweet;
@@ -106,6 +110,5 @@ class Tweep extends CI_Controller {
         $this->tpl['content'] = $this->load->view('tweep_keyword', $this->tpl, true);
         $this->load->view('body', $this->tpl);
     }
-    
 
 }

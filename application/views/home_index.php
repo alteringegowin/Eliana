@@ -4,6 +4,9 @@
         <div class="bheadr"></div>
 
         <h2>Pages</h2>
+        <form action="" method="post">
+            <input type="text" class="text" value="Search" />
+        </form>
     </div>
     <div class="block_content">
         <!-- table -->
