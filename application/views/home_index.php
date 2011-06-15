@@ -1,11 +1,24 @@
+<script>
+    $(document).ready(function(){
+        $("#s_q").click(function(){
+            $(this).val('');
+        }).blur(function(){
+            if($(this).val() == ''){
+                $(this).val('Search');
+            }else{
+                $("#frm-search").submit();
+            }
+        });
+    });
+</script>
 <div class="block ">
     <div class="block_head">
         <div class="bheadl"></div>
         <div class="bheadr"></div>
 
         <h2>Pages</h2>
-        <form action="" method="post">
-            <input type="text" class="text" value="Search" />
+        <form action="<?php echo site_url('home/search') ?>" method="post" id="frm-search">
+            <input type="text" class="text" name="q" id="s_q" value="Search" />
         </form>
     </div>
     <div class="block_content">
