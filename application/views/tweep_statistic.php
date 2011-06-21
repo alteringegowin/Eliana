@@ -4,12 +4,7 @@
         <div class="bheadr"></div>
 
         <h2><?php echo $tweep->screen_name ?></h2>
-        <ul>
-            <li><a href="<?php echo site_url('tweep/index/' . $tweep->user_id) ?>">Status</a></li>
-            <li class="active">WordCloud</li>
-            <li><a href="<?php echo site_url('tweep/mention/' . $tweep->user_id) ?>">Mention</a></li>
-            <li><a href="<?php echo site_url('tweep/user/' . $tweep->user_id) ?>">User</a></li>
-        </ul>
+        <?php $this->load->view('tweep_header_menu'); ?>
     </div>
     <div class="block_content">
 
@@ -31,10 +26,13 @@
             </div>
         </form>
         <p>&nbsp;</p>
-
-        <div id="tweep-growth" class="reg"></div>
-        <div id="tweep-stat"  class="reg"></div>
-        <div id="tweep-cloud"  class="reg"></div>
+        <div id="statistic">
+            <div id="tweep-mention" class="reg ui-widget"></div>
+            <div id="tweep-growth" class="reg"></div>
+            <div id="tweep-num" class="reg ui-widget"></div>
+            <div id="tweep-stat"  class="reg"></div>
+            <div id="tweep-cloud"  class="reg"></div>
+        </div>
     </div>		
     <!-- .block_content ends -->
 

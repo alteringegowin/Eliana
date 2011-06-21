@@ -54,11 +54,12 @@ class tweep_model extends CI_Model {
         FROM tweet_mentions m
             LEFT JOIN tweet_users u ON u.user_id=m.source_user_id
         WHERE m.target_user_id=?
+            AND m.source_user_id  != ? 
         GROUP BY m.source_user_id
         ORDER BY total DESC
         LIMIT 10
         ";
-        return $this->db->query($sql, array($user_id))->result();
+        return $this->db->query($sql, array($user_id,$user_id))->result();
     }
 
     function get_top_mentioned($user_id, $limit=10) {
@@ -72,12 +73,16 @@ class tweep_model extends CI_Model {
             count(*) as total 
         FROM tweet_mentions m
             LEFT JOIN tweet_users u ON u.user_id=m.target_user_id
-        WHERE m.source_user_id=? AND u.screen_name IS NOT NULL
+        WHERE 
+            m.source_user_id=? 
+            AND u.screen_name IS NOT NULL
+            AND m.target_user_id != ? 
+        
         GROUP BY m.target_user_id
         ORDER BY total DESC
         LIMIT 10
         ";
-        return $this->db->query($sql, array($user_id))->result();
+        return $this->db->query($sql, array($user_id,$user_id))->result();
     }
 
     function get_tweet($tweet_id) {
@@ -122,11 +127,11 @@ class tweep_model extends CI_Model {
         foreach ($stats as $r) {
             $str .= " " . $r->tweet_text;
         }
-        
-        $forbidden = array($RT->screen_name,'yang', 'kepada', 'http', 'cont', 'dengan', 
+
+        $forbidden = array($RT->screen_name, 'yang', 'kepada', 'http', 'cont', 'dengan',
             'oleh',
-            'kita', 'kamu', 'saya', 'tapi', 'this', 'that');
-        $words = $this->process_words($str,$forbidden);
+            'kita', 'kamu', 'saya', 'tapi', 'this', 'that', '___');
+        $words = $this->process_words($str, $forbidden);
 
         return array_reverse($words);
     }
@@ -220,6 +225,52 @@ class tweep_model extends CI_Model {
             
         ";
         $stats = $this->db->query($sql, array($screen_name, $start, $end))->result();
+        return $stats;
+    }
+
+    function count_retweet($screen_name, $start, $end) {
+
+        $RT = 'RT @' . $screen_name;
+
+        $sql = "
+        SELECT 
+            (
+                SELECT 
+                    COUNT( tweet_id ) 
+                FROM tweets
+                WHERE  `screen_name` =  '" . $this->db->escape_str($screen_name) . "'
+                AND created_at
+                BETWEEN  '" . $this->db->escape_str($start) . "' AND  '" . $this->db->escape_str($end) . "'
+            ) AS tweets,
+            COUNT(  `tweet_id` ) AS retweets, 
+            COUNT( DISTINCT  `user_id` ) AS users, 
+            SUM(  `followers_count` ) AS followers
+        FROM `tweets` 
+        WHERE 
+            `tweet_text` LIKE '%" . $this->db->escape_like_str($RT) . " %'
+            AND `screen_name` != ?
+            AND created_at BETWEEN ? AND ?
+            
+        ";
+        $stats = $this->db->query($sql, array($screen_name, $start, $end))->row();
+        return $stats;
+    }
+
+    function count_mention($user_id,$start,$end) {
+        $sql = "
+        SELECT 
+            count(t.tweet_id) as mentions,
+            count(DISTINCT t.user_id) as users,
+            MAX(t.created_at) as since,
+            MIN(t.created_at) as until
+        FROM tweet_mentions m
+            LEFT JOIN tweet_users u ON u.user_id=m.source_user_id
+            LEFT JOIN tweets t ON t.tweet_id=m.tweet_id
+        WHERE m.target_user_id= ?
+            AND t.created_at BETWEEN ? AND ?
+
+        ";
+        $stats = $this->db->query($sql, array($user_id, $start, $end))->row();
         return $stats;
     }
 

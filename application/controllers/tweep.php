@@ -8,6 +8,7 @@ if ( !defined('BASEPATH') )
 class Tweep extends CI_Controller {
 
     protected $tpl;
+    protected $profile;
 
     /**
      * @todo check kalo uri_segment 3 ga ada...
@@ -19,9 +20,10 @@ class Tweep extends CI_Controller {
         $this->tpl['content'] = '';
         $this->load->model('tweep_model', 'tweep');
         if ( !$this->uri->segment(3) ) {
-            redirect('home');
+            redirect('home/tweep');
         }
-        $this->tpl['tweep'] = $this->tweep->get_tweep($this->uri->segment(3));
+        $this->profile = $this->tweep->get_tweep($this->uri->segment(3));
+        $this->tpl['tweep'] = $this->profile;
     }
 
     function index($user_id='', $offset=0) {
@@ -131,10 +133,32 @@ class Tweep extends CI_Controller {
         $keywords = $this->tweep->get_cloud_keyword($user_id, $start, $end);
         $tags = array_slice($keywords, 0, 100);
         foreach ($tags as $r) {
-            $this->wordcloud->addWord($r['word'], $r['count']);
+            $word = anchor('#', $r['word']);
+            $this->wordcloud->addWord($word, $r['count']);
         }
         $this->tpl['cloud'] = $this->wordcloud->showCloud();
         $this->load->view('tweep_get_cloud', $this->tpl);
+    }
+
+    function get_stat_rt($user_id) {
+        $start = $this->input->post('start', 1);
+        $end = $this->input->post('end', 1);
+
+        $keywords = $this->tweep->count_retweet($this->profile->screen_name, $start, $end);
+        $this->tpl['rt'] = $keywords;
+        $this->load->view('tweep_get_stat_rt', $this->tpl);
+    }
+
+    function get_mention($user_id) {
+        $start = $this->input->post('start', 1);
+        $end = $this->input->post('end', 1);
+
+        $start = '2011-06-01';
+        $end = '2011-06-30';
+
+        $keywords = $this->tweep->count_mention($user_id, $start, $end);
+        $this->tpl['mention'] = $keywords;
+        $this->load->view('tweep_get_mention', $this->tpl);
     }
 
 }

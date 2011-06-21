@@ -4,12 +4,7 @@
         <div class="bheadr"></div>
 
         <h2>Last Status: <?php echo $tweep->screen_name ?></h2>
-        <ul>
-            <li class="active">Status</li>
-            <li><a href="<?php echo site_url('tweep/keyword/' . $tweep->user_id) ?>">WordCloud</a></li>
-            <li><a href="<?php echo site_url('tweep/mention/' . $tweep->user_id) ?>">Mention</a></li>
-            <li><a href="<?php echo site_url('tweep/user/' . $tweep->user_id) ?>">User</a></li>
-        </ul>
+        <?php $this->load->view('tweep_header_menu'); ?>
     </div>
     <div class="block_content">
         <!-- table -->
@@ -56,6 +51,7 @@
                         <td><?php echo $selisih < 0 ? $selisih : '+' . $selisih ?></td>
                         <td>
                             <?php $cRT = count_retweeted($r->tweet_text, $r->screen_name) ?>
+                            <?php //$cRT = 0;?>
                             <?php if ( $cRT ): ?>
                                 <a href="<?php echo site_url('tweep/rt/' . $tweep->user_id . '/' . $r->tweet_id) ?>"><?php echo $cRT ?></a>
                             <?php else: ?>

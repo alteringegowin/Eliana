@@ -12,17 +12,23 @@ $(function () {
         var urlGrowth = siteUrl+'/tweep/get_growth/'+user_id;
         var urlStat = siteUrl+'/tweep/get_rt/'+user_id;
         var urlCloud = siteUrl+'/tweep/get_cloud/'+user_id;
+        var urlRT = siteUrl+'/tweep/get_stat_rt/'+user_id;
+        var urlMention = siteUrl+'/tweep/get_mention/'+user_id;
         
         $.when(
             $.post(urlGrowth,data),
             $.post(urlStat,data),
-            $.post(urlCloud,data)
+            $.post(urlCloud,data),
+            $.post(urlRT,data),
+            $.post(urlMention,data)
             
             ).done(
-            function(growth,stat,cloud){
+            function(growth,stat,cloud,rt,mention){
+                $("#tweep-num").html(rt[0]);
                 $("#tweep-growth").html(growth[0]);
                 $("#tweep-stat").html(stat[0]);
                 $("#tweep-cloud").html(cloud[0]);
+                $("#tweep-mention").html(mention[0]);
 
 
 

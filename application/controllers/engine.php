@@ -22,6 +22,8 @@ class Engine extends CI_Controller {
             $this->tpl['process'] = true;
         }
 
+
+
         $this->tpl['url_start'] = $this->config->item('engine_url_start');
         $this->tpl['url_stop'] = $this->config->item('engine_url_stop');
 
@@ -55,10 +57,42 @@ class Engine extends CI_Controller {
             if ( !$fol ) {
                 $d['screen_name'] = $res->screen_name;
                 $d['user_id'] = $res->user_id;
-                $this->db->insert('tweet_follow',$d);
+                $this->db->insert('tweet_follow', $d);
             }
         }
         redirect('engine/go');
+    }
+
+    function save($type) {
+        if ( $type == 'keyword' ) {
+            $keyword = $this->input->post('keyword', 1);
+            $table = 'tweet_keywords';
+
+            $this->db->where('keyword', $keyword);
+            $row = $this->db->get($table)->num_rows();
+            if ( $row ) {
+                echo 'false';
+            } else {
+                $db['keyword'] = $keyword;
+                $db['keyword_date'] = time();
+                $this->db->insert($table, $db);
+                echo 'true';
+            }
+        } else { 
+            $keyword = $this->input->post('tweep', 1);
+            $table = 'tweet_follow';
+
+            $this->db->where('screen_name', $keyword);
+            $row = $this->db->get($table)->num_rows();
+            if ( $row ) {
+                echo 'false';
+            } else {
+                $db['screen_name'] = $keyword;
+                $db['keyword_date'] = time();
+                //$this->db->insert($table, $db);
+                echo 'true';
+            }
+        }
     }
 
 }

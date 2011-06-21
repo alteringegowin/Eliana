@@ -13,13 +13,23 @@ class Home extends CI_Controller {
         $this->load->model('home_model', 'home');
         $this->load->library('session');
     }
+    
+    function index(){
+        $r = $this->home->statistic();
+        $this->tpl['stats'] = $r;
+        $this->tpl['content'] = $this->load->view('home_statistic', $this->tpl, true);
+        $this->load->view('body', $this->tpl);
+    }
+    function def(){
+        redirect('home/index');
+    }
 
-    function index($offset=0) {
+    function tweep($offset=0) {
         $this->load->helper('date');
         $limit = 25;
         $results = $this->home->get_followed($offset, $limit);
         $this->tpl['followeds'] = $results;
-        $this->tpl['pagination'] = create_pagination('home/index', $results['total'], $limit, 3);
+        $this->tpl['pagination'] = create_pagination('home/tweep', $results['total'], $limit, 3);
         $this->tpl['content'] = $this->load->view('home_index', $this->tpl, true);
         $this->load->view('body', $this->tpl);
     }
@@ -46,7 +56,7 @@ class Home extends CI_Controller {
         $this->tpl['content'] = $this->load->view('home_index', $this->tpl, true);
         $this->load->view('body', $this->tpl);
     }
-
+    
 }
 
 /* End of file welcome.php */

@@ -4,13 +4,7 @@
         <div class="bheadr"></div>
 
         <h2>User : <?php echo $tweep->screen_name ?></h2>
-        <ul>
-            <li><a href="<?php echo site_url('tweep/index/' . $tweep->user_id) ?>">Status</a></li>
-            <li><a href="<?php echo site_url('tweep/keyword/' . $tweep->user_id) ?>">WordCloud</a></li>
-            <li><a href="<?php echo site_url('tweep/mention/' . $tweep->user_id) ?>">Mention</a></li>
-            <li class="active">User</li>
-
-        </ul>
+        <?php $this->load->view('tweep_header_menu'); ?>
     </div>
     <div class="block_content">
         <h3>Top 10 User Mention</h3>
@@ -19,59 +13,59 @@
             <thead>
                 <tr>
                     <th style="width:50px;">&nbsp;</th>
-                    <th>User</th>
-                    <th style="width: 150px;">&nbsp;</th>
-                    <th style="width: 150px;">&nbsp;</th>
+                    <th>User Mention</th>
+                    <th style="width: 150px;text-align: right">Followers</th>
+                    <th style="width: 150px;text-align: right">Total Mention</th>
+                    <th style="width:50px;border-right: solid 1px #363636">&nbsp;</th>
+                    <th>&nbsp;</th>
+                    <th>User Mentioned</th>
+                    <th style="width: 150px;text-align: right">Followers</th>
+                    <th style="width: 150px;text-align: right">Total Mentioned</th>
                 </tr>
             </thead>
 
             <tbody>
-                <?php foreach ($mentions as $r): ?>
+                <?php for ($i = 0; $i < 10; $i++): ?>
+                    <?php $mention = isset($mentions[$i]) ? $mentions[$i] : array(); ?>
+                    <?php $mentioned = isset($mentioneds[$i]) ? $mentioneds[$i] : array(); ?>
                     <tr>
-                        <td><img src="<?php echo $r->profile_image_url ?>" alt="<?php echo $r->screen_name ?>"/></td>
-                        <td>
-                            <h4><?php echo $r->screen_name ?></h4>
-                            <?php echo $r->description ?>
-                        </td>
-                        <td style="text-align: right"><?php echo $r->followers_count ?> followers</td>
-                        <td style="text-align: right"><strong><?php echo $r->total ?></strong> mentions</td>
+                        <?php if ( $mention ): ?>
+                            <td><img src="<?php echo $mention->profile_image_url ?>" alt="<?php echo $mention->screen_name ?>"/></td>
+                            <td>
+                                <h4><?php echo $mention->screen_name ?></h4>
+                                <small><?php echo $mention->description ?></small>
+                            </td>
+                            <td style="text-align: right;"><?php echo number_format($mention->followers_count) ?></td>
+                            <td style="text-align: right;"><?php echo number_format($mention->total) ?></td>
+                        <?php else: ?>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                        <?php endif; ?>
+
+                        <td style="border-right: solid 1px #363636">&nbsp;</td>
+                        <?php if ( $mentioned ): ?>
+                            <td><img src="<?php echo $mentioned->profile_image_url ?>" alt="<?php echo $mentioned->screen_name ?>"/></td>
+                            <td>
+                                <h4><?php echo $mentioned->screen_name ?></h4>
+                                <small><?php echo $mentioned->description ?></small>
+                            </td>
+                            <td style="text-align: right;"><?php echo number_format($mentioned->followers_count) ?></td>
+                            <td style="text-align: right;"><?php echo number_format($mentioned->total) ?></td>
+                        <?php else: ?>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                        <?php endif; ?>
                     </tr>
-                <?php endforeach; ?>
+                <?php endfor; ?>
             </tbody>
 
         </table>
         <!-- /table -->
 
-        <p>&nbsp;</p>
-
-        <h3>Top 10 User Mentioned</h3>
-        <!-- table -->
-        <table cellpadding="0" cellspacing="0" width="100%" class="sortable">
-            <thead>
-                <tr>
-                    <th style="width:50px;">&nbsp;</th>
-                    <th>User</th>
-                    <th style="width: 150px;">&nbsp;</th>
-                    <th style="width: 150px;">&nbsp;</th>
-                </tr>
-            </thead>
-
-            <tbody>
-                <?php foreach ($mentioneds as $r): ?>
-                    <tr>
-                        <td><img src="<?php echo $r->profile_image_url ?>" alt="<?php echo $r->screen_name ?>"/></td>
-                        <td>
-                            <h4><?php echo $r->screen_name ?></h4>
-                            <?php echo $r->description ?>
-                        </td>
-                        <td style="text-align: right"><?php echo $r->followers_count ?> followers</td>
-                        <td style="text-align: right"><strong><?php echo $r->total ?></strong> mentions</td>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
-
-        </table>
-        <!-- /table -->
         <p>&nbsp;</p>
 
 

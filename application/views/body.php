@@ -11,6 +11,7 @@
 
         <title><?php echo config_item('app_title'); ?></title>
         <link rel="stylesheet" href="css/backends.css" type="text/css" media="screen" title="" charset="utf-8" />
+        <link rel="stylesheet" href="js/jquery-ui/css/flick/jquery-ui.css" type="text/css" media="screen" title="" charset="utf-8" />
 
         <?php if ( isset($styles) ): ?>
             <?php foreach ($styles as $j): ?>
@@ -18,7 +19,6 @@
             <?php endforeach ?>
         <?php endif; ?>
 
-        <link rel="stylesheet" href="js/jquery-ui/css/flick/jquery-ui.css" type="text/css" media="screen" title="" charset="utf-8" />
         <script type="text/javascript" src="js/jquery-ui/js/jquery-1.5.1.min.js"></script>
         <script type="text/javascript" src="js/jquery-ui/js/jquery-ui-1.8.13.custom.min.js"></script>
         <script type="text/javascript" src="js/jquery.tablesorter.min.js"></script>

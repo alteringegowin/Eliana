@@ -4,19 +4,15 @@
         <div class="bheadr"></div>
 
         <h2>Mention: <?php echo $tweep->screen_name ?></h2>
-        <ul>
-            <li><a href="<?php echo site_url('tweep/index/' . $tweep->user_id) ?>">Status</a></li>
-            <li><a href="<?php echo site_url('tweep/keyword/' . $tweep->user_id) ?>">WordCloud</a></li>
-            <li class="active">Mention</li>
-            <li><a href="<?php echo site_url('tweep/user/' . $tweep->user_id) ?>">User</a></li>
-        </ul>
+        <?php $this->load->view('tweep_header_menu'); ?>
     </div>
     <div class="block_content">
         <!-- table -->
         <table cellpadding="0" cellspacing="0" width="100%" class="">
             <thead>
                 <tr>
-                    <th>photo</th>
+                    <th>&nbsp;</th>
+                    <th>Date</th>
                     <th>Status</th>
                     <th>Followers</th>
                 </tr>
