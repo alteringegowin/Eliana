@@ -48,8 +48,7 @@ class Home_model extends CI_Model {
             LEFT JOIN tweet_users u ON f.user_id = u.user_id  
             LEFT JOIN tweets t ON t.tweet_id = m.tweet_id
         WHERE 
-            t.tweet_text NOT LIKE '@%' 
-            AND t.created_at BETWEEN  ? AND  ?
+            t.created_at BETWEEN  ? AND  ?
         GROUP BY f.user_id
         ORDER BY mentions DESC 
         ";

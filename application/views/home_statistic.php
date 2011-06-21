@@ -47,7 +47,7 @@
                         <td><span style="font-size: 1.4em;"><?php echo $i++; ?></span></td>
                         <td><img src="<?php echo $r->profile_image_url ?>"/></td>
                         <td>
-                            <h4><?php echo $r->screen_name ?> </h4>
+                            <h4><a href="<?php echo site_url('tweep/index/' . $r->user_id) ?>"><?php echo $r->screen_name ?></a> </h4>
                             <small><?php echo $r->description ?></small>
                         </td>
                         <td><?php echo $r->mentions ?></td>
