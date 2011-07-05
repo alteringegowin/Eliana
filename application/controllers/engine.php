@@ -100,10 +100,8 @@ class Engine extends CI_Controller {
         $this->load->helper('date');
         $this->load->library('tweet');
         $tokens = $this->session->userdata('tokens');
-        $tokens = array(
-            'oauth_token' => '26401725-P4ahcQRodpuFS7GYSMKDCTLszhz0HBPTZMo4F9fkc',
-            'oauth_token_secret' => 'D3gnjQHxV3y9pVeqrh1Qo63ZkxB5lwQWlwg1YjKaOo'
-        );
+        $tokens['oauth_token'] = $this->config->item('oauth_token');
+        $tokens['oauth_token_secret'] = $this->config->item('oauth_token_secret');
         if ( $tokens ) {
             $this->tweet->set_tokens($tokens);
         }
@@ -130,5 +128,5 @@ class Engine extends CI_Controller {
         $this->tpl['content'] = $this->load->view('engine_add_account', $this->tpl, true);
         $this->load->view('body', $this->tpl);
     }
-    
+
 }
