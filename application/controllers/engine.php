@@ -78,21 +78,53 @@ class Engine extends CI_Controller {
                 $this->db->insert($table, $db);
                 echo 'true';
             }
-        } else { 
-            $keyword = $this->input->post('tweep', 1);
+        } else {
+            $screen_name = $this->input->post('screen_name', 1);
+            $user_id = $this->input->post('user_id', 1);
             $table = 'tweet_follow';
 
-            $this->db->where('screen_name', $keyword);
+            $this->db->where('screen_name', $screen_name);
             $row = $this->db->get($table)->num_rows();
             if ( $row ) {
                 echo 'false';
             } else {
-                $db['screen_name'] = $keyword;
-                $db['keyword_date'] = time();
-                //$this->db->insert($table, $db);
+                $db['screen_name'] = $screen_name;
+                $db['user_id'] = $user_id;
+                $this->db->insert($table, $db);
                 echo 'true';
             }
         }
     }
 
+    function add_account() {
+        $this->load->helper('date');
+        $this->load->library('tweet');
+        $tokens = $this->session->userdata('tokens');
+        if ( $tokens ) {
+            $this->tweet->set_tokens($tokens);
+        }
+
+        if ( !$this->tweet->logged_in() ) {
+            // This is where the url will go to after auth.
+            // ( Callback url )
+            // Send the user off for login!
+            $this->tweet->set_callback(current_url());
+            $this->tweet->login();
+        } else {
+            // You can get the tokens for the active logged in user:
+            $tokens = $this->tweet->get_tokens();
+            $this->session->set_userdata('tokens', $tokens);
+            // 
+            // These can be saved in a db alongside a user record
+            // if you already have your own auth system.
+        }
+
+        $param['screen_name'] = $this->input->post('account', true);
+        $user = $this->tweet->call('GET', 'users/show', $param);
+
+        $this->tpl['user'] = $user;
+        $this->tpl['content'] = $this->load->view('engine_add_account', $this->tpl, true);
+        $this->load->view('body', $this->tpl);
+    }
+    
 }

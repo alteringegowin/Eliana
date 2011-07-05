@@ -68,7 +68,7 @@
 
 
 
-<div class="block ">
+<div class="block small left">
     <div class="block_head">
         <div class="bheadl"></div>
         <div class="bheadr"></div>
@@ -87,6 +87,34 @@
 
             <p>
                 <a href="<?php echo site_url('engine/save/keyword') ?>" class="buttonUI"  id="button-add-keyword">Save Keyword</a>
+            </p>
+        </form>
+    </div>		
+    <!-- .block_content ends -->
+
+    <div class="bendl"></div>
+    <div class="bendr"></div>
+</div>		
+
+<div class="block small right">
+    <div class="block_head">
+        <div class="bheadl"></div>
+        <div class="bheadr"></div>
+
+        <h2>Add Account Twitter</h2>
+    </div>
+    <div class="block_content">
+        <p>
+            You can add <strong>dada</strong> keywords left
+        </p>
+        <form id="frm-account-add" action="<?php echo site_url('engine/add_account') ?>" method="post">
+            <p>
+                <label>Tweet Account:</label><br />
+                <input type="text" class="text medium" name="account" value="" id="txt-add-account" style="width:220px"/>
+            </p>
+
+            <p>
+                <input type="submit" name="save" value="save" class="buttonUI" />
             </p>
         </form>
     </div>		
