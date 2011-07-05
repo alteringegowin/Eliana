@@ -100,6 +100,10 @@ class Engine extends CI_Controller {
         $this->load->helper('date');
         $this->load->library('tweet');
         $tokens = $this->session->userdata('tokens');
+        $tokens = array(
+            'oauth_token' => '26401725-P4ahcQRodpuFS7GYSMKDCTLszhz0HBPTZMo4F9fkc',
+            'oauth_token_secret' => 'D3gnjQHxV3y9pVeqrh1Qo63ZkxB5lwQWlwg1YjKaOo'
+        );
         if ( $tokens ) {
             $this->tweet->set_tokens($tokens);
         }
