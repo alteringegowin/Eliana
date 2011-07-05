@@ -10,7 +10,7 @@
                 if(r == 'false'){
                     alert('Account telah ada');
                 }else{
-                    alert('Account sukses ditambahkan, jangan lupa untuk me restart engine');
+                    window.location.replace("<?php echo site_url('engine')?>");
                 }
             });
             return false;
