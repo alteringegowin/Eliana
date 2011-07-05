@@ -49,8 +49,8 @@
         </table>
         <div style="text-align: center;">
             <form>
-                <input type="text" id="txt-screen-name" name="screen_name" value="<?php echo $user->screen_name ?>" />
-                <input type="text" id="txt-user-id" name="user_id" value="<?php echo $user->id_str ?>" />
+                <input type="hidden" id="txt-screen-name" name="screen_name" value="<?php echo $user->screen_name ?>" />
+                <input type="hidden" id="txt-user-id" name="user_id" value="<?php echo $user->id_str ?>" />
                 <a href="<?php echo site_url('engine/save/account') ?>" class="buttonUI"  id="save-to-db">Save Account</a>
             </form>
         </div>
