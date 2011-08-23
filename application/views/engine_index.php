@@ -1,21 +1,6 @@
 <script>
     $(document).ready(function(){
         
-        $("#button-engine-stop").click(function(){
-            var url = $(this).attr('href');
-            $.get(url,function(r){
-                window.location.reload();
-            });
-            return false;
-        });
-        $("#button-engine-start").click(function(){
-            var url = $(this).attr('href');
-            $.get(url,function(r){
-                window.location.reload();
-            });
-            return false;
-        });
-        
         $("#button-add-keyword").click(function(){
             var url = $(this).attr('href');
             var data = $("#txt-add-keyword").val();
@@ -54,7 +39,7 @@
                 Please do not over react with this button. Please just start/stop engine with one minutes interval in between
             </p>
             <p>
-                <a href="<?php echo $url_start ?>" class="buttonUI"  id="button-engine-start">Start Engine</a>
+                <a rel="facebox" href="<?php echo site_url('engine/startengine')?>" class="buttonUI"  id="button-engine-start">Start Engine</a>
             </p>
         <?php endif; ?>
 
@@ -123,3 +108,6 @@
     <div class="bendl"></div>
     <div class="bendr"></div>
 </div>		
+
+<div id="win-start"></div>
+<div id="win-stop"></div>

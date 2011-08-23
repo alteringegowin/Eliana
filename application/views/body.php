@@ -22,13 +22,14 @@
         <script type="text/javascript" src="js/jquery-ui/js/jquery-1.5.1.min.js"></script>
         <script type="text/javascript" src="js/jquery-ui/js/jquery-ui-1.8.13.custom.min.js"></script>
         <script type="text/javascript" src="js/jquery.tablesorter.min.js"></script>
-        <script type="text/javascript" src="js/global.js"></script>
 
         <?php if ( isset($javascripts) ): ?>
             <?php foreach ($javascripts as $j): ?>
                 <script type="text/javascript" src="<?php echo $j ?>"></script>
             <?php endforeach ?>
         <?php endif; ?>
+
+        <script type="text/javascript" src="js/global.js"></script>
     </head>
 
     <body>

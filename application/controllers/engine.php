@@ -11,8 +11,20 @@ class Engine extends CI_Controller {
     }
 
     function test() {
+        
+    }
 
-#$output = shell_exec('kill -9 11851');
+    function check_captcha($val) {
+        if ( $this->recaptcha->check_answer($this->input->ip_address(), $this->input->post('recaptcha_challenge_field'), $val) ) {
+            return TRUE;
+        } else {
+            $this->form_validation->set_message('check_captcha', $this->lang->line('recaptcha_incorrect_response'));
+            return FALSE;
+        }
+    }
+
+    function testold() {
+        #$output = shell_exec('kill -9 11851');
         $output = shell_exec('ps -ef |grep eliana_get_tweet');
         echo "<pre>$output</pre>";
         $output = shell_exec('ps -ef |grep eliana_process_tweet');
@@ -20,39 +32,59 @@ class Engine extends CI_Controller {
     }
 
     function startengine() {
-        die;
-        $output = `php index.php cli eliana_get_tweet > /dev/null 2>&1 & echo $!`;
-        $db['pid'] = $output;
-        $this->db->where('process', 'eliana_get_tweet');
-        $this->db->update('processes', $db);
+        $this->tpl['act'] = 'engine/startengine';
+        $this->tpl['title_atas'] = 'Start The Engine!';
+        $this->load->library('recaptcha');
+        $this->load->library('form_validation');
+        $this->load->helper('form');
+        $this->lang->load('recaptcha');
+        $this->form_validation->set_rules('recaptcha_response_field', 'lang:recaptcha_field_name', 'required|callback_check_captcha');
+        if ( $this->form_validation->run() ) {
+            $this->tpl['recaptcha'] = 'AHoi';
+            $output = `php index.php cli eliana_get_tweet > /dev/null 2>&1 & echo $!`;
+            $db['pid'] = $output;
+            $this->db->where('process', 'eliana_get_tweet');
+            $this->db->update('processes', $db);
 
-        $output = `php index.php cli eliana_process_tweet > /dev/null 2>&1 & echo $!`;
-        $db['pid'] = $output;
-        $this->db->where('process', 'eliana_process_tweet');
-        $this->db->update('processes', $db);
+            $output = `php index.php cli eliana_process_tweet > /dev/null 2>&1 & echo $!`;
+            $db['pid'] = $output;
+            $this->db->where('process', 'eliana_process_tweet');
+            $this->db->update('processes', $db);
+
+            redirect('engine');
+        } else {
+            $this->tpl['recaptcha'] = $this->recaptcha->get_html();
+        }
+        $this->tpl['content'] = $this->load->view('engine_startengine', $this->tpl, true);
+        $this->load->view('body', $this->tpl);
     }
 
     function stopengine() {
-        die;
-        $kill = "kill -9 `ps -ef |grep eliana_get_tweet|grep -v grep | awk '{print $2}'`";
-        exec($kill);
+        $this->tpl['act'] = 'engine/stopengine';
+        $this->tpl['title_atas'] = 'Stop The Engine!';
 
-        $kill = "kill -9 `ps -ef |grep eliana_process_tweet|grep -v grep | awk '{print $2}'`";
-        exec($kill);
+        $this->load->library('recaptcha');
+        $this->load->library('form_validation');
+        $this->load->helper('form');
+        $this->lang->load('recaptcha');
+        $this->form_validation->set_rules('recaptcha_response_field', 'lang:recaptcha_field_name', 'required|callback_check_captcha');
+        if ( $this->form_validation->run() ) {
+            $db['pid'] = 0;
+            $this->db->where('process', 'eliana_get_tweet');
+            $this->db->update('processes', $db);
 
-
-        $db['pid'] = 0;
-        $this->db->where('process', 'eliana_get_tweet');
-        $this->db->update('processes', $db);
-
-        $db['pid'] = 0;
-        $this->db->where('process', 'eliana_process_tweet');
-        $this->db->update('processes', $db);
+            $db['pid'] = 0;
+            $this->db->where('process', 'eliana_process_tweet');
+            $this->db->update('processes', $db);
+            redirect('engine');
+        } else {
+            $this->tpl['recaptcha'] = $this->recaptcha->get_html();
+        }
+        $this->tpl['content'] = $this->load->view('engine_startengine', $this->tpl, true);
+        $this->load->view('body', $this->tpl);
     }
 
     function index() {
-
-
         $running = TRUE;
         $this->db->where('process', 'eliana_get_tweet');
         $r = $this->db->get('processes')->row();
@@ -71,14 +103,6 @@ class Engine extends CI_Controller {
         $this->tpl['url_stop'] = site_url('engine/stopengine');
 
         $this->tpl['content'] = $this->load->view('engine_index', $this->tpl, true);
-        /*
-          $t = '<div class="block_content">
-          <h3>Sedang dalam pengetesan :)</h3>
-          Kontak langsung erwin aja sementara kalo mo nambahin akun dan keyword ya.. .
-          </div>';
-         * 
-         */
-        //$this->tpl['content'] = $t;
         $this->load->view('body', $this->tpl);
     }
 
@@ -158,18 +182,11 @@ class Engine extends CI_Controller {
         }
 
         if ( !$this->tweet->logged_in() ) {
-// This is where the url will go to after auth.
-// ( Callback url )
-// Send the user off for login!
             $this->tweet->set_callback(current_url());
             $this->tweet->login();
         } else {
-// You can get the tokens for the active logged in user:
             $tokens = $this->tweet->get_tokens();
             $this->session->set_userdata('tokens', $tokens);
-// 
-// These can be saved in a db alongside a user record
-// if you already have your own auth system.
         }
 
         $param['screen_name'] = $this->input->post('account', true);
