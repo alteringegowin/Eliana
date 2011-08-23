@@ -40,26 +40,24 @@ class keyword_model extends CI_Model {
         $def['keyword'] = '';
         $def['limit'] = 10;
         $def['offset'] = 0;
+        $def['start'] = date('Y-m-d');
+        $def['end'] = date('Y-m-') . '31';
 
 //6,601 account
 
         $param = $param + $def;
-        $offset = $param['offset'];
-        $limit = $param['limit'];
+        $start = $param['start'];
+        $end = $param['end'];
 
         $sql = "
-        SELECT SQL_CALC_FOUND_ROWS 
-            * 
+        SELECT *
         FROM tweets 
         WHERE tweet_text  LIKE '%" . $this->db->escape_like_str($param['keyword']) . "%'
-            AND created_at BETWEEN ? AND ?
+                AND created_at BETWEEN ? AND ?
         ORDER BY created_at DESC
-        LIMIT $offset,$limit
         ";
-
         $keywords['data'] = $this->db->query($sql, array($start, $end))->result();
-        $total = $this->db->query('SELECT FOUND_ROWS() as total')->row()->total;
-        $keywords['total'] = $total;
+        $keywords['total'] = count($keywords['data']);
         return $keywords;
     }
 
@@ -112,7 +110,7 @@ class keyword_model extends CI_Model {
     function process_words($text, $forbidden=array(), $min_length=4) {
         $index = array();
         $forbidden = array('yang', 'kepada', 'http', 'cont', 'dengan', 'oleh',
-            'kita', 'kamu', 'saya', 'tapi', 'this', 'that','lockerz'
+            'kita', 'kamu', 'saya', 'tapi', 'this', 'that', 'lockerz'
         );
         $text = str_replace('RT', ' rt ', $text);
         $text = strtolower($text);
@@ -220,7 +218,8 @@ class keyword_model extends CI_Model {
         SELECT 
             sum(followers_count) as followers,
             count(DISTINCT user_id) as users ,
-            count(tweet_id) as tweets
+            count(tweet_id) as tweets,
+            '$start' as dstart,'$end' as dend,'$keyword' as dkeyword
         FROM tweets 
         WHERE tweet_text  LIKE '%" . $this->db->escape_like_str($keyword) . "%'
             AND created_at BETWEEN ? AND ?

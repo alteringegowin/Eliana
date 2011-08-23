@@ -69,6 +69,13 @@ class Engine extends CI_Controller {
         $this->lang->load('recaptcha');
         $this->form_validation->set_rules('recaptcha_response_field', 'lang:recaptcha_field_name', 'required|callback_check_captcha');
         if ( $this->form_validation->run() ) {
+
+            $kill = "kill -9 `ps -ef |grep eliana_get_tweet|grep -v grep | awk '{print $2}'`";
+            exec($kill);
+
+            $kill = "kill -9 `ps -ef |grep eliana_process_tweet|grep -v grep | awk '{print $2}'`";
+            exec($kill);
+
             $db['pid'] = 0;
             $this->db->where('process', 'eliana_get_tweet');
             $this->db->update('processes', $db);

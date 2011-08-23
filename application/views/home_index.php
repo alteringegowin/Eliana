@@ -1,76 +1,77 @@
-<script>
-    $(document).ready(function(){
-        $("#s_q").click(function(){
-            $(this).val('');
-        }).blur(function(){
-            if($(this).val() == ''){
-                $(this).val('Search');
-            }else{
-                $("#frm-search").submit();
-            }
-        });
-    });
-</script>
-<div class="block ">
+<div class="block small left">
     <div class="block_head">
         <div class="bheadl"></div>
         <div class="bheadr"></div>
 
-        <h2>Pages</h2>
-        <form action="<?php echo site_url('home/search') ?>" method="post" id="frm-search">
-            <input type="text" class="text" name="q" id="s_q" value="Search" />
-        </form>
+        <h2>Account Twitter</h2>
     </div>
     <div class="block_content">
-        <!-- table -->
-        <table cellpadding="0" cellspacing="0" width="100%" class="sortable">
+        <table id="sort-col2" cellpadding="0" cellspacing="0" width="100%">
             <thead>
                 <tr>
                     <th>&nbsp;</th>
-                    <th>Data</th>
-                    <th>Followers</th>
-                    <th>Last Update</th>
+                    <th>&nbsp;</th>
+                    <th>User</th>
+                    <th>Total Followers</th>
                 </tr>
             </thead>
 
             <tbody>
-                <?php foreach ($followeds['data'] as $r): ?>
-                    <?php if ( $r->description ): ?>
-                        <tr>
-                            <td><img src="<?php echo $r->profile_image_url ?>"/></td>
-                            <td>
-                                <strong><a href="<?php echo site_url('tweep/index/' . $r->user_id) ?>"><?php echo $r->screen_name ?> (<?php echo $r->name ?>)</a></strong>
-                                <div>
-                                    <?php echo $r->description ?>
-                                </div>
-
-                            </td>
-                            <td><?php echo $r->followers_count ?></td>
-                            <td><?php echo date('Y-m-d H:i', mysql_to_unix($r->last_update)) ?></td>
-                        </tr>
-                    <?php else: ?>
-                        <tr>
-                            <td>not available yet</td>
-                            <td>
-                                <strong><?php echo $r->screen_name ?> </strong>
-                            </td>
-                            <td>not available yet</td>
-                            <td>not available yet</td>
-                        </tr>
-                    <?php endif; ?>
+                <?php $i = 1; ?>
+                <?php foreach ($acc as $r): ?>
+                    <tr>
+                        <td><span style="font-size: 1.4em;"><?php echo $i++; ?></span></td>
+                        <td><img src="<?php echo $r->profile_image_url ?>"/></td>
+                        <td>
+                            <h4><a href="<?php echo site_url('tweep/index/' . $r->user_id) ?>"><?php echo $r->screen_name ?></a> </h4>
+                            <small><?php echo $r->description ?></small>
+                        </td>
+                        <td><?php echo $r->followers_count ?></td>
+                    </tr>
                 <?php endforeach; ?>
             </tbody>
 
         </table>
-        <!-- /table -->
-
-        <!-- pagination ends -->
-        <div class="pagination right">
-            <?php echo $pagination; ?>
-        </div>		
-        <!-- .pagination ends -->
 
 
+    </div>		
+    <!-- .block_content ends -->
+
+    <div class="bendl"></div>
+    <div class="bendr"></div>
+
+</div>		
+<!-- .login ends -->
+
+<div class="block small right">
+    <div class="block_head">
+        <div class="bheadl"></div>
+        <div class="bheadr"></div>
+
+        <h2>Keyword</h2>
+    </div>
+    <div class="block_content">
+        <table id="sort-col2" cellpadding="0" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th>Keywords</th>
+                    <th>Date</th>
+                    <th>&nbsp;</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <?php $i = 1; ?>
+                <?php foreach ($keywords as $r): ?>
+                    <tr>
+                        <td><?php echo anchor('keyword/archieve/'.$r->id.'/',$r->keyword) ?></td>
+                        <td><?php echo  unix_to_human($r->keyword_date) ?></td>
+                        <td>&nbsp;</td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+
+        </table>
 
     </div>		
     <!-- .block_content ends -->

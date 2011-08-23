@@ -29,6 +29,7 @@ class Keyword extends CI_Controller {
 
     /**
      * Menghitung total tweet based on keyword and periode
+     * @deprecated
      */
     function count_tweet() {
         $keyword = $this->input->post('keyword', 1);
@@ -80,8 +81,53 @@ class Keyword extends CI_Controller {
         $keyword = $this->input->post('keyword', 1);
         $start = $this->input->post('start', 1);
         $end = $this->input->post('end', 1);
-        $this->tpl['freq'] = $this->keyword->get_freq($keyword, $start, $end); 
+        $this->tpl['freq'] = $this->keyword->get_freq($keyword, $start, $end);
         $this->load->view('keyword_statistic', $this->tpl);
+    }
+
+    function archieve($keyword_id=0) {
+        $this->load->helper('form');
+        $start = $this->uri->segment(4, date('Y-m-d'));
+        $end = $this->uri->segment(5, date('Y-m-d'));
+        $keyword = $this->keyword->get_keyword($keyword_id);
+
+        $this->session->set_userdata('keyword', $keyword->keyword);
+
+        $param['keyword'] = $keyword->keyword;
+        $param['start'] = $start;
+        $param['end'] = $end;
+        $searchs = $this->keyword->search_keyword($param);
+
+        $this->tpl['keyword_id'] = $keyword_id;
+        $this->tpl['keyword'] = $keyword->keyword;
+        $this->tpl['searchs'] = $searchs;
+        $this->tpl['styles'][] = 'css/wordcloud.css';
+        $this->tpl['styles'][] = 'css/visualize.css';
+        $this->tpl['javascripts'][] = 'js/jquery.visualize.js';
+        $this->tpl['javascripts'][] = 'js/jquery.visualize.tooltip.js';
+        $this->tpl['javascripts'][] = 'js/keyword.archieve.js';
+        $this->tpl['content'] = $this->load->view('keyword_archieve', $this->tpl, true);
+        $this->load->view('body', $this->tpl);
+    }
+
+    function download($start,$end) {
+        $keyword = $this->session->userdata('keyword');
+        if ( $start && $end ) {
+            $this->load->helper('download');
+            $sql = "
+                SELECT  
+                    created_at,screen_name,tweet_text,name,followers_count
+                FROM tweets 
+                WHERE tweet_text  LIKE '%" . $this->db->escape_like_str($keyword) . "%'
+                    AND created_at BETWEEN ? AND ?
+                ORDER BY created_at DESC
+                ";
+            $this->load->dbutil();
+            $query = $this->db->query($sql, array($start, $end));
+            $csvdata = $this->dbutil->csv_from_result($query);
+            $filename = $keyword . ' from ' . $start . ' sd ' . $end;
+            force_download(url_title($filename) . '.csv', $csvdata);
+        }
     }
 
 }

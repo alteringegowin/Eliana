@@ -112,7 +112,7 @@ class Cli extends CI_Controller {
                     $entities_param = array(
                         'tweet_id' => $tweet_id,
                         'source_user_id' => $user_id,
-                        'source_user_id' => $user_mention->id,
+                        'target_user_id' => $user_mention->id,
                     );
                     $ada = $this->db->get_where('tweet_mentions', $entities_param)->row();
 
