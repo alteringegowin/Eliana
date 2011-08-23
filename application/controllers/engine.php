@@ -10,24 +10,75 @@ class Engine extends CI_Controller {
         $this->config->load('engine');
     }
 
+    function test() {
+
+#$output = shell_exec('kill -9 11851');
+        $output = shell_exec('ps -ef |grep eliana_get_tweet');
+        echo "<pre>$output</pre>";
+        $output = shell_exec('ps -ef |grep eliana_process_tweet');
+        echo "<pre>$output</pre>";
+    }
+
+    function startengine() {
+        die;
+        $output = `php index.php cli eliana_get_tweet > /dev/null 2>&1 & echo $!`;
+        $db['pid'] = $output;
+        $this->db->where('process', 'eliana_get_tweet');
+        $this->db->update('processes', $db);
+
+        $output = `php index.php cli eliana_process_tweet > /dev/null 2>&1 & echo $!`;
+        $db['pid'] = $output;
+        $this->db->where('process', 'eliana_process_tweet');
+        $this->db->update('processes', $db);
+    }
+
+    function stopengine() {
+        die;
+        $kill = "kill -9 `ps -ef |grep eliana_get_tweet|grep -v grep | awk '{print $2}'`";
+        exec($kill);
+
+        $kill = "kill -9 `ps -ef |grep eliana_process_tweet|grep -v grep | awk '{print $2}'`";
+        exec($kill);
+
+
+        $db['pid'] = 0;
+        $this->db->where('process', 'eliana_get_tweet');
+        $this->db->update('processes', $db);
+
+        $db['pid'] = 0;
+        $this->db->where('process', 'eliana_process_tweet');
+        $this->db->update('processes', $db);
+    }
+
     function index() {
+
+
         $running = TRUE;
-        $this->db->where('process', 'get_tweets.php');
+        $this->db->where('process', 'eliana_get_tweet');
         $r = $this->db->get('processes')->row();
-        $command = 'ps ' . $r->pid;
-        exec($command, $output);
+        $output = array();
+        if ( $r->pid ) {
+            $command = 'ps ' . $r->pid;
+            exec($command, $output);
+        }
         if ( count($output) < 2 ) {
             $this->tpl['process'] = false;
         } else {
             $this->tpl['process'] = true;
         }
 
-
-
-        $this->tpl['url_start'] = $this->config->item('engine_url_start');
-        $this->tpl['url_stop'] = $this->config->item('engine_url_stop');
+        $this->tpl['url_start'] = site_url('engine/startengine');
+        $this->tpl['url_stop'] = site_url('engine/stopengine');
 
         $this->tpl['content'] = $this->load->view('engine_index', $this->tpl, true);
+        /*
+          $t = '<div class="block_content">
+          <h3>Sedang dalam pengetesan :)</h3>
+          Kontak langsung erwin aja sementara kalo mo nambahin akun dan keyword ya.. .
+          </div>';
+         * 
+         */
+        //$this->tpl['content'] = $t;
         $this->load->view('body', $this->tpl);
     }
 
@@ -107,18 +158,18 @@ class Engine extends CI_Controller {
         }
 
         if ( !$this->tweet->logged_in() ) {
-            // This is where the url will go to after auth.
-            // ( Callback url )
-            // Send the user off for login!
+// This is where the url will go to after auth.
+// ( Callback url )
+// Send the user off for login!
             $this->tweet->set_callback(current_url());
             $this->tweet->login();
         } else {
-            // You can get the tokens for the active logged in user:
+// You can get the tokens for the active logged in user:
             $tokens = $this->tweet->get_tokens();
             $this->session->set_userdata('tokens', $tokens);
-            // 
-            // These can be saved in a db alongside a user record
-            // if you already have your own auth system.
+// 
+// These can be saved in a db alongside a user record
+// if you already have your own auth system.
         }
 
         $param['screen_name'] = $this->input->post('account', true);

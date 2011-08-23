@@ -50,7 +50,7 @@
                         <td><?php echo $r->followers_count ?></td>
                         <td><?php echo $selisih < 0 ? $selisih : '+' . $selisih ?></td>
                         <td>
-                            <?php $cRT = count_retweeted($r->tweet_text, $r->screen_name) ?>
+                            <?php $cRT = count_retweeted($r->tweet_text, $r->screen_name, $r->user_id) ?>
                             <?php //$cRT = 0;?>
                             <?php if ( $cRT ): ?>
                                 <a href="<?php echo site_url('tweep/rt/' . $tweep->user_id . '/' . $r->tweet_id) ?>"><?php echo $cRT ?></a>

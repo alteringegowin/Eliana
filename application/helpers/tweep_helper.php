@@ -7,14 +7,20 @@
  * @param string $screen_name
  * @return int 
  */
-function count_retweeted($text, $screen_name) {
+function count_retweeted($text, $screen_name, $user_id='') {
     $ci = & get_instance();
     $text = character_limiter($text, 30, '');
     $RT = 'RT @' . $screen_name;
     $sql = "
-    SELECT count(*) as total
-    FROM tweets 
-    WHERE tweet_text  LIKE '%" . $ci->db->escape_like_str($RT) . "%" . $ci->db->escape_like_str($text) . "%'";
+    SELECT 
+        COUNT( tweets.tweet_id ) AS total
+    FROM tweet_mentions
+        LEFT JOIN tweets ON tweets.tweet_id = tweet_mentions.tweet_id ";
+    if ( $user_id ) {
+        $sql .= " AND tweet_mentions.target_user_id=" . $user_id;
+    }
+
+    $sql .= " WHERE tweets.tweet_text  LIKE '%" . $ci->db->escape_like_str($RT) . "%" . $ci->db->escape_like_str($text) . "%'";
     $row = $ci->db->query($sql)->row();
     if ( isset($row->total) ) {
         return $row->total;
