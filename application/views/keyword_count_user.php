@@ -15,11 +15,11 @@
             <tr>
                 <td><?php echo $no++; ?></td>
                 <td>
-                    <strong><?php echo $r['t_screen_name'] ?> </strong>
+                    <strong><?php echo anchor_popup('keyword/user/'.$r['t_user_id'].'/'.$r['t_start'].'/'.$r['t_end'],$r['t_screen_name']) ?> </strong>
                     <small>(<?php echo $r['t_counted'] ?> tweets)</small>
                 </td>
                 <td>
-                    <strong><?php echo $r['f_screen_name'] ?> </strong>
+                    <strong><?php echo anchor_popup('keyword/user/'.$r['f_user_id'].'/'.$r['f_start'].'/'.$r['f_end'],$r['f_screen_name']) ?> </strong>
                     <small>(<?php echo $r['f_counted'] ?> followers)</small>
                 </td>
             </tr>

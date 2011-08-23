@@ -110,7 +110,7 @@ class Keyword extends CI_Controller {
         $this->load->view('body', $this->tpl);
     }
 
-    function download($start,$end) {
+    function download($start, $end) {
         $keyword = $this->session->userdata('keyword');
         if ( $start && $end ) {
             $this->load->helper('download');
@@ -128,6 +128,30 @@ class Keyword extends CI_Controller {
             $filename = $keyword . ' from ' . $start . ' sd ' . $end;
             force_download(url_title($filename) . '.csv', $csvdata);
         }
+    }
+
+    function user($user_id,$start, $end) {
+        $keyword = $this->session->userdata('keyword');
+        
+        $sql = "
+        SELECT
+            t.created_at, t.screen_name, 
+            t.tweet_text, 
+            t.name, 
+            t.followers_count,
+            tu.profile_image_url
+        FROM tweets t
+            LEFT JOIN tweet_users tu ON tu.user_id=t.user_id
+        WHERE 
+            t.tweet_text LIKE '%" . $this->db->escape_like_str($keyword) . "%'
+            AND t.created_at BETWEEN ? AND ?
+            AND t.user_id = ?
+        ORDER BY t.created_at DESC
+        ";
+        $results = $this->db->query($sql, array($start, $end,$user_id))->result();
+        $this->tpl['tweets'] = $results;
+        $this->tpl['content'] = $this->load->view('keyword_user', $this->tpl, true);
+        $this->load->view('body', $this->tpl);
     }
 
 }

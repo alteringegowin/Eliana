@@ -169,44 +169,61 @@ class keyword_model extends CI_Model {
 
     function count_user($keyword, $start, $end) {
         $sql = "
-            SELECT user_id, screen_name, count( `tweet_id` ) AS counted
+            SELECT user_id, screen_name, count( `tweet_id` ) AS counted,
+                '$start' as dstart,
+                '$end' as dend
             FROM tweets
             WHERE 
                 tweet_text  LIKE '%" . $this->db->escape_like_str($keyword) . "%'
                 AND created_at BETWEEN ? AND ?
             GROUP BY `user_id`
             ORDER BY counted DESC
-            LIMIT 10          
+            LIMIT 30          
         ";
         $most_tweets = $this->db->query($sql, array($start, $end))->result();
 
         $sql = "
-            SELECT user_id, screen_name, max( `followers_count` ) AS counted
+            SELECT 
+                user_id, screen_name, max( `followers_count` ) AS counted,
+                '$start' as dstart,
+                '$end' as dend
             FROM tweets
             WHERE 
                 tweet_text  LIKE '%" . $this->db->escape_like_str($keyword) . "%'
                 AND created_at BETWEEN ? AND ?
             GROUP BY `user_id`
             ORDER BY counted DESC
-            LIMIT 10          
+            LIMIT 30          
         ";
         $most_followers = $this->db->query($sql, array($start, $end))->result();
         $d = array();
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 30; $i++) {
             $data = array();
             if ( isset($most_tweets[$i]) ) {
                 $data['t_screen_name'] = $most_tweets[$i]->screen_name;
                 $data['t_counted'] = $most_tweets[$i]->counted;
+                $data['t_user_id'] = $most_tweets[$i]->user_id;
+                $data['t_start'] = $most_tweets[$i]->dstart;
+                $data['t_end'] = $most_tweets[$i]->dend;
             } else {
                 $data['t_screen_name'] = '&nbsp;';
                 $data['t_counted'] = '&nbsp;';
+                $data['t_user_id'] = false;
+                $data['t_start'] = '';
+                $data['t_end'] = '';
             }
             if ( isset($most_followers[$i]) ) {
                 $data['f_screen_name'] = $most_followers[$i]->screen_name;
                 $data['f_counted'] = $most_followers[$i]->counted;
+                $data['f_user_id'] = $most_followers[$i]->user_id;
+                $data['f_start'] = $most_followers[$i]->dstart;
+                $data['f_end'] = $most_followers[$i]->dend;
             } else {
                 $data['f_screen_name'] = '&nbsp;';
                 $data['f_counted'] = '&nbsp;';
+                $data['f_user_id'] = false;
+                $data['f_start'] = '';
+                $data['f_end'] = '';
             }
             $d[$i] = $data;
         }

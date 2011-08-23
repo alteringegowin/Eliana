@@ -1195,3 +1195,8 @@ form .block  input.submit.long:hover { background: url(../images/backends/btnb_.
 .reg{padding-bottom: 30px;padding-top: 10px; }
 
 .block_content h2{border-bottom: solid 1px #888}
+
+
+#tweet-stat-user a:link,#tweet-stat-user a:visited{
+    color:#0073EA;
+}
