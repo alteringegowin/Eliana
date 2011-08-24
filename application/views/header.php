@@ -7,5 +7,6 @@
     <ul id="nav">
         <li><a href="<?php echo site_url('') ?>">Dashboard</a></li>
         <li><a href="<?php echo site_url('engine') ?>">Engine</a></li>
+        <li><a href="<?php echo site_url('auth/logout') ?>">Logout</a></li>
     </ul>
 </div>

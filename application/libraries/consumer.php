@@ -6,8 +6,8 @@ define('AJAX_URL', 'http://erwin.think.web.id/140dev/');
 
 // Basic authorization settings for connecting to the Twitter streaming API
 // Fill in the values for a valid Twitter account
-define('STREAM_ACCOUNT', 'pengkode');
-define('STREAM_PASSWORD', 'kodeajaib');
+define('STREAM_ACCOUNT', 'MandaBoobs');
+define('STREAM_PASSWORD', 'cinta.tivi');
 
 // MySQL time zone setting to normalize dates
 define('TIME_ZONE', 'Asia/Jakarta');

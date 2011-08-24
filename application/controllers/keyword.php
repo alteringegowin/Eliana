@@ -8,6 +8,10 @@ class Keyword extends CI_Controller {
 
     function __construct() {
         parent::__construct();
+        if ( !$this->session->userdata('is_login') ) {
+            redirect('auth/login');
+        }
+        
         $this->tpl = array();
         $this->tpl['content'] = '';
         $this->load->model('keyword_model', 'keyword');

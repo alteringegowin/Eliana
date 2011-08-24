@@ -16,6 +16,10 @@ class Tweep extends CI_Controller {
     function __construct() {
         parent::__construct();
         $this->load->helper('time');
+        if ( !$this->session->userdata('is_login') ) {
+            redirect('auth/login');
+        }
+        
         $this->tpl = array();
         $this->tpl['content'] = '';
         $this->load->model('tweep_model', 'tweep');

@@ -19,6 +19,9 @@ class Influencer extends CI_Controller {
         $this->tpl = array();
         $this->tpl['content'] = '';
         $this->tpl['tweep'] = $this->profile;
+        if ( !$this->session->userdata('is_login') ) {
+            redirect('auth/login');
+        }
     }
 
     function index($screen_name = '') {

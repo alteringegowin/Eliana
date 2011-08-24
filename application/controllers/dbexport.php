@@ -6,6 +6,10 @@ class Dbexport extends CI_Controller {
         parent::__construct();
         $this->load->dbutil();
         $this->load->helper('download');
+        if ( !$this->session->userdata('is_login') ) {
+            redirect('auth/login');
+        }
+        
     }
 
     function index($user_id) {
