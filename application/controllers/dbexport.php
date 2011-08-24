@@ -86,5 +86,19 @@ class Dbexport extends CI_Controller {
         $csv = $this->dbutil->csv_from_result($query);
         force_download('mention-' . $screen . '.csv', $csv);
     }
+    
+    
+    function test(){
+        $this->load->helper('tweep');
+        $this->db->limit(30);
+        $this->db->order_by('created_at','DESC');
+        $this->db->where('screen_name','lalights');
+        $res = $this->db->get('tweets')->result();
+        foreach($res as $r){
+            $cRT = count_retweeted($r->tweet_text, $r->screen_name, $r->user_id);
+            xdebug($cRT);
+        }
+        
+    }
 
 }
