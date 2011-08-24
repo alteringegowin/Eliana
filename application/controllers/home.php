@@ -13,19 +13,22 @@ class Home extends CI_Controller {
         $this->load->model('home_model', 'home');
         $this->load->library('session');
         $this->load->helper('date');
+        if ( !$this->session->userdata('is_login') ) {
+            redirect('auth/login');
+        }
     }
 
     function index() {
         //get account
         $this->db->order_by('tweet_follow.screen_name');
         $this->db->Select('tweet_users.*,tweet_follow.*');
-        $this->db->join('tweet_users','tweet_users.user_id=tweet_follow.user_id','LEFT');
+        $this->db->join('tweet_users', 'tweet_users.user_id=tweet_follow.user_id', 'LEFT');
         $acc = $this->db->get('tweet_follow')->result();
-        
+
         //get keywords
         $this->db->order_by('keyword');
         $keywords = $this->db->get('tweet_keywords')->result();
-        
+
         $this->tpl['acc'] = $acc;
         $this->tpl['keywords'] = $keywords;
         $this->tpl['content'] = $this->load->view('home_index', $this->tpl, true);

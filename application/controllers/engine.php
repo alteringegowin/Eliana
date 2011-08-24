@@ -29,6 +29,9 @@ class Engine extends CI_Controller {
         echo "<pre>$output</pre>";
         $output = shell_exec('ps -ef |grep eliana_process_tweet');
         echo "<pre>$output</pre>";
+        
+        $output = shell_exec('ps -ef |grep eliana_monitor');
+        echo "<pre>$output</pre>";
     }
 
     function startengine() {
@@ -50,6 +53,10 @@ class Engine extends CI_Controller {
             $db['pid'] = $output;
             $this->db->where('process', 'eliana_process_tweet');
             $this->db->update('processes', $db);
+            
+            //monitor tweets
+            $output = `php index.php cli eliana_monitor > /dev/null 2>&1 & echo $!`;
+            
 
             redirect('engine');
         } else {

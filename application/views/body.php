@@ -37,7 +37,10 @@
         <div id="hld">
             <div class="wrapper">
 
-                <?php $this->load->view('header'); ?>
+                <?php if ( !isset($no_menu) ): ?>
+                    <?php $this->load->view('header'); ?>
+                <?php endif; ?>
+
                 <?php echo $content; ?>
 
 

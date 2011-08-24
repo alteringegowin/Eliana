@@ -34,7 +34,7 @@ class Cli extends CI_Controller {
         while (true) {
             // Process all new tweets
             $query = 'SELECT cache_id, raw_tweet ' .
-                    'FROM json_cache WHERE NOT parsed';
+                'FROM json_cache WHERE NOT parsed';
             $result = $this->db->query($query)->result_array();
             foreach ($result as $row) {
                 $cache_id = $row['cache_id'];
@@ -129,6 +129,34 @@ class Cli extends CI_Controller {
             // You can adjust the sleep interval to handle the tweet flow and 
             // server load you experience
             sleep(30);
+        }
+    }
+
+    function eliana_monitor() {
+        while (true) {
+            $running = TRUE;
+            $this->db->where('process', 'eliana_get_tweet');
+            $r = $this->db->get('processes')->row();
+            $output = array();
+            if ( $r->pid ) {
+                $command = 'ps ' . $r->pid;
+                exec($command, $output);
+            }
+            if ( count($output) < 2 ) {
+                $running = false;
+                //kirim email
+                $this->load->library('email');
+                $this->email->from('no-reply@eliana.listentelligence.com', 'Admin');
+                $this->email->to('bhasunjaya@gmail.com');
+
+                $this->email->subject('[ELIANA] Down at ' . date('Y-m-d H:i:s'));
+                $this->email->message('yes.. its down brother');
+                $this->email->send();
+                exit;
+            } else {
+                $running = true;
+            }
+            sleep(60);
         }
     }
 

@@ -8,15 +8,60 @@ class Dbexport extends CI_Controller {
         $this->load->helper('download');
     }
 
-    function index() {
-        $res = $this->db->get('tweet_follow')->result();
+    function index($user_id) {
+        $sql = "
+        SELECT * FROM tweets 
+        WHERE user_id=?
+        ORDER BY created_at
+        ";
+
+        $fields = $this->db->list_fields('tweets');
+        $res = $this->db->query($sql, array($user_id))->result();
         foreach ($res as $r) {
-            echo anchor('dbexport/dl/' . $r->screen_name, 'tweets');
-            echo ' | ';
-            echo anchor('dbexport/mentions/' . $r->user_id . '/' . $r->screen_name, 'mention');
-            echo ' &nbsp;&nbsp;&nbsp;' . $r->screen_name . ' ';
-            echo '<br />';
+            foreach ($fields as $f) {
+                $db[$f] = $r->$f;
+            }
+            $s[] = $this->db->insert_string('tweets_import', $db);
         }
+
+        echo implode(";\n", $s);
+    }
+
+    function keyword() {
+        $this->load->helper('download');
+        /*
+        $this->db->or_like('tweet_text', 'pokkaindonesia');
+        $this->db->or_like('tweet_text', 'the junction bali');
+        $this->db->or_like('tweet_text', 'freshonastick');
+        */
+        //$this->db->or_like('tweet_text', 'magnumroadcafe');
+        //$this->db->or_like('tweet_text', 'guinnesspool');
+        
+        /*
+        $this->db->or_like('tweet_text', 'mandirifiesta');
+        $this->db->or_like('tweet_text', 'wallsbuavita');
+        $this->db->or_like('tweet_text', 'MagnumRoadCafeSBY');
+        $this->db->or_like('tweet_text', 'GuinnessMusic');
+        $this->db->or_like('tweet_text', 'DapurPeduli');
+        $this->db->or_like('tweet_text', 'ptc3words');
+        $this->db->or_like('tweet_text', 'ABCDapurPeduli');
+        $this->db->or_like('tweet_text', 'PTCblog');
+         * 
+         */
+        //$this->db->limit(2000,2000);
+        $res = $this->db->get('tweets')->result();
+
+        $fields = $this->db->list_fields('tweets');
+        foreach ($res as $r) {
+            foreach ($fields as $f) {
+                $db[$f] = $r->$f;
+            }
+            $s[] = $this->db->insert_string('tweets_keyword_backup', $db);
+        }
+        $data = implode(";\n", $s);
+        $name = 'tweets_keyword_backup.sql';
+
+        force_download($name, $data);
     }
 
     function dl($screen_name='acerID') {
