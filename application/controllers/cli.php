@@ -143,7 +143,24 @@ class Cli extends CI_Controller {
                 exec($command, $output);
             }
             if ( count($output) < 2 ) {
-                $running = false;
+                //try restarting
+                $this->load->library('consumer');
+                $res = $this->db->query('SELECT keyword FROM tweet_keywords')->result();
+                $keyword = array();
+                foreach ($res as $r) {
+                    $keyword[] = $r->keyword;
+                }
+
+                $res = $this->db->query('SELECT user_id FROM tweet_follow')->result();
+                $users = array();
+                foreach ($res as $r) {
+                    $users[] = $r->user_id;
+                }
+
+                $this->consumer->setTrack($keyword);
+                $this->consumer->setFollow($users);
+                $this->consumer->consume();
+
                 //kirim email
                 $this->load->library('email');
                 $this->email->from('no-reply@eliana.listentelligence.com', 'Admin');
@@ -152,11 +169,10 @@ class Cli extends CI_Controller {
                 $this->email->subject('[ELIANA] Down at ' . date('Y-m-d H:i:s'));
                 $this->email->message('yes.. its down brother');
                 $this->email->send();
-                exit;
             } else {
                 $running = true;
             }
-            sleep(60);
+            sleep(15);
         }
     }
 
