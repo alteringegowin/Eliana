@@ -1,17 +1,21 @@
 <?php
 
-class Cli extends CI_Controller {
+class Cli extends CI_Controller
+{
 
-    function __construct() {
+    function __construct()
+    {
         parent::__construct();
         $this->load->helper('tweep');
     }
 
-    function index() {
+    function index()
+    {
         echo "Hello world!" . PHP_EOL;
     }
 
-    function eliana_get_tweet() {
+    function eliana_get_tweet()
+    {
         $this->load->library('consumer');
         $res = $this->db->query('SELECT keyword FROM tweet_keywords')->result();
         $keyword = array();
@@ -30,7 +34,8 @@ class Cli extends CI_Controller {
         $this->consumer->consume();
     }
 
-    function eliana_process_tweet() {
+    function eliana_process_tweet()
+    {
         while (true) {
             // Process all new tweets
             $query = 'SELECT cache_id, raw_tweet ' .
@@ -132,7 +137,8 @@ class Cli extends CI_Controller {
         }
     }
 
-    function eliana_monitor() {
+    function eliana_monitor()
+    {
         while (true) {
             $running = TRUE;
             $this->db->where('process', 'eliana_get_tweet');
@@ -143,24 +149,7 @@ class Cli extends CI_Controller {
                 exec($command, $output);
             }
             if ( count($output) < 2 ) {
-                //try restarting
-                $this->load->library('consumer');
-                $res = $this->db->query('SELECT keyword FROM tweet_keywords')->result();
-                $keyword = array();
-                foreach ($res as $r) {
-                    $keyword[] = $r->keyword;
-                }
-
-                $res = $this->db->query('SELECT user_id FROM tweet_follow')->result();
-                $users = array();
-                foreach ($res as $r) {
-                    $users[] = $r->user_id;
-                }
-
-                $this->consumer->setTrack($keyword);
-                $this->consumer->setFollow($users);
-                $this->consumer->consume();
-
+                $running = false;
                 //kirim email
                 $this->load->library('email');
                 $this->email->from('no-reply@eliana.listentelligence.com', 'Admin');
@@ -169,10 +158,11 @@ class Cli extends CI_Controller {
                 $this->email->subject('[ELIANA] Down at ' . date('Y-m-d H:i:s'));
                 $this->email->message('yes.. its down brother');
                 $this->email->send();
+                exit;
             } else {
                 $running = true;
             }
-            sleep(15);
+            sleep(60);
         }
     }
 
