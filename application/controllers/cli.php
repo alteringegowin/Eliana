@@ -7,11 +7,9 @@ class Cli extends CI_Controller
     {
         parent::__construct();
         $this->load->helper('tweep');
-    }
-
-    function index()
-    {
-        echo "Hello world!" . PHP_EOL;
+        if ( !$this->input->is_cli_request() ) {
+            die('cli only');
+        }
     }
 
     function eliana_get_tweet()
@@ -140,7 +138,6 @@ class Cli extends CI_Controller
     function eliana_monitor()
     {
         while (true) {
-            $running = TRUE;
             $this->db->where('process', 'eliana_get_tweet');
             $r = $this->db->get('processes')->row();
             $output = array();
@@ -149,18 +146,25 @@ class Cli extends CI_Controller
                 exec($command, $output);
             }
             if ( count($output) < 2 ) {
-                $running = false;
+
                 //kirim email
                 $this->load->library('email');
                 $this->email->from('no-reply@eliana.listentelligence.com', 'Admin');
                 $this->email->to('bhasunjaya@gmail.com');
+                $this->email->cc('mega@think.web.id');
 
                 $this->email->subject('[ELIANA] Down at ' . date('Y-m-d H:i:s'));
                 $this->email->message('yes.. its down brother');
                 $this->email->send();
-                exit;
-            } else {
-                $running = true;
+
+                //try to restart the service
+                $output = `php index.php cli eliana_get_tweet > /dev/null 2>&1 & echo $!`;
+                if ( $output ) {
+                    $db['pid'] = $output;
+                    $this->db->where('process', 'eliana_get_tweet');
+                    $this->db->update('processes', $db);
+                }
+                sleep(10);
             }
             sleep(60);
         }

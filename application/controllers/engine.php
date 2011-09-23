@@ -11,11 +11,9 @@ class Engine extends CI_Controller {
         if ( !$this->session->userdata('is_login') ) {
             redirect('auth/login');
         }
-    }
-
-    function test() {
         
     }
+
 
     function check_captcha($val) {
         if ( $this->recaptcha->check_answer($this->input->ip_address(), $this->input->post('recaptcha_challenge_field'), $val) ) {
@@ -38,6 +36,22 @@ class Engine extends CI_Controller {
     }
 
     function startengine() {
+    	$this->tpl['recaptcha'] = 'AHoi';
+        $output = `php index.php cli eliana_get_tweet > /dev/null 2>&1 & echo $!`;
+        $db['pid'] = $output;
+        $this->db->where('process', 'eliana_get_tweet');
+        $this->db->update('processes', $db);
+
+        $output = `php index.php cli eliana_process_tweet > /dev/null 2>&1 & echo $!`;
+        $db['pid'] = $output;
+        $this->db->where('process', 'eliana_process_tweet');
+        $this->db->update('processes', $db);
+            
+        //monitor tweets
+        $output = `php index.php cli eliana_monitor > /dev/null 2>&1 & echo $!`;
+        redirect('engine');
+    	exit;
+    
         $this->tpl['act'] = 'engine/startengine';
         $this->tpl['title_atas'] = 'Start The Engine!';
         $this->load->library('recaptcha');
@@ -70,6 +84,26 @@ class Engine extends CI_Controller {
     }
 
     function stopengine() {
+    		$kill = "kill -9 `ps -ef |grep eliana_get_tweet|grep -v grep | awk '{print $2}'`";
+            exec($kill);
+
+            $kill = "kill -9 `ps -ef |grep eliana_process_tweet|grep -v grep | awk '{print $2}'`";
+            exec($kill);
+            
+            $kill = "kill -9 `ps -ef |grep eliana_monitor|grep -v grep | awk '{print $2}'`";
+            exec($kill);
+            
+            $db['pid'] = 0;
+            $this->db->where('process', 'eliana_get_tweet');
+            $this->db->update('processes', $db);
+
+            $db['pid'] = 0;
+            $this->db->where('process', 'eliana_process_tweet');
+            $this->db->update('processes', $db);
+            redirect('engine');
+            exit;
+            
+            
         $this->tpl['act'] = 'engine/stopengine';
         $this->tpl['title_atas'] = 'Stop The Engine!';
 
