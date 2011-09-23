@@ -217,7 +217,7 @@ class tweep_model extends CI_Model {
             SUM(  `followers_count` ) AS followers
         FROM `tweets` 
         WHERE 
-            `tweet_text` LIKE '%" . $this->db->escape_like_str($RT) . " %'
+            `tweet_text` LIKE '%" . $this->db->escape_like_str($RT) . "%'
             AND `screen_name` != ?
             AND created_at BETWEEN ? AND ?
         GROUP BY tanggal

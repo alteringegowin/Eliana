@@ -5,7 +5,8 @@ if ( !defined('BASEPATH') )
 /**
  * this is the property of user that we follow
  */
-class Tweep extends CI_Controller {
+class Tweep extends CI_Controller
+{
 
     protected $tpl;
     protected $profile;
@@ -13,24 +14,26 @@ class Tweep extends CI_Controller {
     /**
      * @todo check kalo uri_segment 3 ga ada...
      */
-    function __construct() {
+    function __construct()
+    {
         parent::__construct();
         $this->load->helper('time');
         if ( !$this->session->userdata('is_login') ) {
             redirect('auth/login');
         }
-        
+
         $this->tpl = array();
         $this->tpl['content'] = '';
         $this->load->model('tweep_model', 'tweep');
         if ( !$this->uri->segment(3) ) {
-            redirect('home/tweep');
+            //redirect('home/tweep');
         }
         $this->profile = $this->tweep->get_tweep($this->uri->segment(3));
         $this->tpl['tweep'] = $this->profile;
     }
 
-    function index($user_id='', $offset=0) {
+    function index($user_id='', $offset=0)
+    {
         $this->load->helper('tweep');
         $limit = 10;
         $acc = $this->tweep->get_tweep_status($user_id, $offset, $limit);
@@ -40,8 +43,8 @@ class Tweep extends CI_Controller {
         $this->load->view('body', $this->tpl);
     }
 
-    function statistic($user_id) {
-
+    function statistic($user_id)
+    {
         $this->tpl['user_id'] = $user_id;
         $this->tpl['styles'][] = 'css/wordcloud.css';
         $this->tpl['styles'][] = 'css/visualize.css';
@@ -52,7 +55,8 @@ class Tweep extends CI_Controller {
         $this->load->view('body', $this->tpl);
     }
 
-    function mention($user_id='', $offset=0) {
+    function mention($user_id='', $offset=0)
+    {
         $limit = 10;
         $this->tpl['mention'] = $this->tweep->get_mention($user_id, $offset, $limit);
         $this->tpl['pagination'] = create_pagination('/tweep/mention/' . $user_id, $this->tpl['mention'] ['total'], $limit, 4);
@@ -60,7 +64,8 @@ class Tweep extends CI_Controller {
         $this->load->view('body', $this->tpl);
     }
 
-    function user($user_id='') {
+    function user($user_id='')
+    {
         $mentions = $this->tweep->get_top_mention($user_id, 20);
         $mentioneds = $this->tweep->get_top_mentioned($user_id, 20);
         $this->tpl['mentions'] = $mentions;
@@ -69,7 +74,8 @@ class Tweep extends CI_Controller {
         $this->load->view('body', $this->tpl);
     }
 
-    function growth($user_id) {
+    function growth($user_id)
+    {
         
     }
 
@@ -77,12 +83,14 @@ class Tweep extends CI_Controller {
      * @deprecated
      * @param type $user_id 
      */
-    function profile($user_id='') {
+    function profile($user_id='')
+    {
         $this->tpl['content'] = $this->load->view('tweep_profile', $this->tpl, true);
         $this->load->view('body', $this->tpl);
     }
 
-    function rt($user_id, $tweet_id) {
+    function rt($user_id, $tweet_id)
+    {
         $this->load->helper('date');
         $tweet = $this->tweep->get_tweet($tweet_id);
 
@@ -95,7 +103,8 @@ class Tweep extends CI_Controller {
         $this->load->view('body', $this->tpl);
     }
 
-    function reply($user_id, $tweet_id) {
+    function reply($user_id, $tweet_id)
+    {
         $this->load->helper('date');
         $tweet = $this->tweep->get_tweet($tweet_id);
 
@@ -107,7 +116,8 @@ class Tweep extends CI_Controller {
         $this->load->view('body', $this->tpl);
     }
 
-    function get_growth($user_id) {
+    function get_growth($user_id)
+    {
         $start = $this->input->post('start');
         $end = $this->input->post('end');
 
@@ -116,12 +126,21 @@ class Tweep extends CI_Controller {
         $this->load->view('tweet_get_growth', $this->tpl);
     }
 
-    function get_rt($user_id) {
+    function get_rt($user_id='')
+    {
         $start = $this->input->post('start');
         $end = $this->input->post('end');
-        $screen_name = $this->tpl['tweep']->screen_name;
+        //$screen_name = $this->tpl['tweep']->screen_name;
 
+        
+        $screen_name = 'bumihijaumu'; 
+        $start = "2011-09-01";
+        $end = "2011-09-30";
+        
         $rt = $this->tweep->count_retweet_per_tanggal($screen_name, $start, $end);
+        xdebug($rt);die;
+        
+        
         $this->tpl['rt'] = $rt;
         $this->load->view('tweep_get_rt', $this->tpl);
     }
@@ -129,7 +148,8 @@ class Tweep extends CI_Controller {
     /**
      * menghasilkan cloud
      */
-    function get_cloud($user_id) {
+    function get_cloud($user_id)
+    {
         $this->load->library('wordcloud');
         $start = $this->input->post('start', 1);
         $end = $this->input->post('end', 1);
@@ -144,7 +164,8 @@ class Tweep extends CI_Controller {
         $this->load->view('tweep_get_cloud', $this->tpl);
     }
 
-    function get_stat_rt($user_id) {
+    function get_stat_rt($user_id)
+    {
         $start = $this->input->post('start', 1);
         $end = $this->input->post('end', 1);
 
@@ -153,7 +174,8 @@ class Tweep extends CI_Controller {
         $this->load->view('tweep_get_stat_rt', $this->tpl);
     }
 
-    function get_mention($user_id) {
+    function get_mention($user_id)
+    {
         $start = $this->input->post('start', 1);
         $end = $this->input->post('end', 1);
 
