@@ -4,10 +4,10 @@
         <div class="bheadr"></div>
         <h2>Keywords</h2>
 		<div>
-			<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
-			<input type="submit" name="positif" value="Positif">
+			<form name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
 			<input type="submit" name="minus" value="Minus">
 			<input type="submit" name="netral" value="Netral">
+			<input type="submit" name="positif" value="Positif">
 		</div>
     </div>
     <div class="block_content">
@@ -15,17 +15,20 @@
         <table cellpadding="0" cellspacing="0" width="100%" class="">
 			<thead>
                 <tr>
-                    <th>photo</th>
+					<th>
+						<input type="checkbox" name="Check_ctr" value="yes" onClick="Check(document.myform.cid)"> 
+                    </th>
+					<th>Photo</th>
                     <th>Status</th>
                     <th>Followers</th>
 					<th>Sentiment</th>
-					<th>Action</th>
                 </tr>
             </thead>
 
             <tbody>
                 <?php if($tweets): foreach ($tweets as $r): ?>
                     <tr class="tr-">
+						<td align="center"><input type="checkbox" name="cid[]" value="<?php echo $r->tweet_id ?>"></td>
                         <td>
                             <img height="48" width="48" src="<?php echo $r->profile_image_url ?>" alt="<?php echo $r->profile_image_url ?>" class="user-profile-link">
                         </td>
@@ -37,8 +40,7 @@
                             <div class="twitter-text"><?php echo $r->created_at ?></div>
                         </td>
                         <td><?php echo $r->followers_count ?></td>
-						<td align="center"><?php echo $r->sentiment ?></td>
-						<td align="center"><input type="checkbox" name="cid[]" value="<?php echo $r->tweet_id ?>"></td>
+						<td><?php echo $r->sentiment ?></td>
                     </tr>
                 <?php endforeach; endif;?>
             </tbody>
@@ -56,3 +58,24 @@
     <div class="bendr"></div> 
 
 </div>
+
+<SCRIPT LANGUAGE="JavaScript">
+
+function Check(chk)
+{
+if(document.myform.Check_ctr.checked==true){
+	select(1);
+}else{
+	select(0);
+}
+}
+
+function select(a) {
+    var theForm = document.myform;
+    for (i=0; i<theForm.elements.length; i++) {
+        if (theForm.elements[i].name=='cid[]')
+            theForm.elements[i].checked = a;
+    }
+}
+
+</script>
