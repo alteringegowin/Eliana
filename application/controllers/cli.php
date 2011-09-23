@@ -1,17 +1,21 @@
 <?php
 
-class Cli extends CI_Controller {
+class Cli extends CI_Controller
+{
 
-    function __construct() {
+    function __construct()
+    {
         parent::__construct();
         $this->load->helper('tweep');
     }
 
-    function index() {
+    function index()
+    {
         echo "Hello world!" . PHP_EOL;
     }
 
-    function eliana_get_tweet() {
+    function eliana_get_tweet()
+    {
         $this->load->library('consumer');
         $res = $this->db->query('SELECT keyword FROM tweet_keywords')->result();
         $keyword = array();
@@ -30,7 +34,8 @@ class Cli extends CI_Controller {
         $this->consumer->consume();
     }
 
-    function eliana_process_tweet() {
+    function eliana_process_tweet()
+    {
         while (true) {
             // Process all new tweets
             $query = 'SELECT cache_id, raw_tweet ' .
@@ -132,7 +137,8 @@ class Cli extends CI_Controller {
         }
     }
 
-    function eliana_monitor() {
+    function eliana_monitor()
+    {
         while (true) {
             $running = TRUE;
             $this->db->where('process', 'eliana_get_tweet');

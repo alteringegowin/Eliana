@@ -85,6 +85,9 @@ class Engine extends CI_Controller {
 
             $kill = "kill -9 `ps -ef |grep eliana_process_tweet|grep -v grep | awk '{print $2}'`";
             exec($kill);
+            
+            $kill = "kill -9 `ps -ef |grep eliana_monitor|grep -v grep | awk '{print $2}'`";
+            exec($kill);
 
             $db['pid'] = 0;
             $this->db->where('process', 'eliana_get_tweet');
