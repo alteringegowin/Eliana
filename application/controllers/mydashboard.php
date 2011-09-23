@@ -57,8 +57,9 @@ class Mydashboard extends CI_Controller {
 
 
 		$limit =10;
-        $keyword = $this->mydashboard->get_key($key_id);    
+        $keyword = $this->mydashboard->get_key($key_id);
         $results = $this->mydashboard->get_tweet($keyword, $offset, $limit);
+		$this->tpl['keyword'] = $keyword;
 		$this->tpl['tweets'] = $results['data'];
 		$this->tpl['pagination'] = create_pagination('/mydashboard/tweet/' . $key_id, $results['total'], $limit, 4);
         $this->tpl['content'] = $this->load->view('mydashboard_tweet', $this->tpl, true);
