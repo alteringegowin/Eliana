@@ -26,7 +26,7 @@ class mydashboard_model extends CI_Model {
         ";
         $r['data'] = $this->db->query($sql)->result();
 		//$total = $this->db->query('SELECT FOUND_ROWS() as total')->row();
-        $total = $this->db->query("SELECT count(*) as total FROM `tweets` WHERE tweet_text LIKE '%" . $this->db->escape_like_str($keyword) . "%'")->row();
+        $total = $this->db->query("SELECT count(*) as total FROM `tweets` WHERE tweet_text LIKE '%#" . $this->db->escape_like_str($keyword) . "%'")->row();
         $r['total'] = $total->total;
         return $r;
     }
