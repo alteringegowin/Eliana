@@ -130,15 +130,10 @@ class Tweep extends CI_Controller
     {
         $start = $this->input->post('start');
         $end = $this->input->post('end');
-        //$screen_name = $this->tpl['tweep']->screen_name;
+        $screen_name = $this->tpl['tweep']->screen_name;
 
         
-        $screen_name = 'bumihijaumu'; 
-        $start = "2011-09-01";
-        $end = "2011-09-30";
-        
         $rt = $this->tweep->count_retweet_per_tanggal($screen_name, $start, $end);
-        xdebug($rt);die;
         
         
         $this->tpl['rt'] = $rt;
@@ -179,8 +174,6 @@ class Tweep extends CI_Controller
         $start = $this->input->post('start', 1);
         $end = $this->input->post('end', 1);
 
-        $start = '2011-06-01';
-        $end = '2011-06-30';
 
         $keywords = $this->tweep->count_mention($user_id, $start, $end);
         $this->tpl['mention'] = $keywords;

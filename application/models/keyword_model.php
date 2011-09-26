@@ -43,8 +43,6 @@ class keyword_model extends CI_Model {
         $def['start'] = date('Y-m-d');
         $def['end'] = date('Y-m-') . '31';
 
-//6,601 account
-
         $param = $param + $def;
         $start = $param['start'];
         $end = $param['end'];
@@ -250,6 +248,7 @@ class keyword_model extends CI_Model {
         $sql = "
         SELECT 
             count(tweet_id) as tweets,
+            sum(followers_count) as impression,
             count(distinct user_id) as users,
             date(`created_at`) as tanggal
         FROM tweets

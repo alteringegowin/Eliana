@@ -1,5 +1,6 @@
 <?php
 $diff = date_diffxx($mention->since, $mention->until);
+$diff['total'] = $diff['total'] == 0 ? 1 : $diff['total'];
 $freq = number_format($mention->mentions/$diff['total'],4);
 ?>
 <h2>Mentions statistic</h2>

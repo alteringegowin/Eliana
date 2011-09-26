@@ -16,7 +16,6 @@
             <p>
                 <?php echo form_hidden('keyword', $keyword) ?>
                 <input type="submit" class="submit mid" id="btn-keyword-submit" value="Show">
-
             </p>
         </form>
 
