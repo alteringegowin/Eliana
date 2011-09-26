@@ -2,32 +2,31 @@
 if ( !defined('BASEPATH') )
     exit('No direct script access allowed');
 
-class Keyword extends CI_Controller {
+class Keyword extends CI_Controller
+{
 
     protected $tpl;
 
-    function __construct() {
+    function __construct()
+    {
         parent::__construct();
         if ( !$this->session->userdata('is_login') ) {
             redirect('auth/login');
         }
-        
+
         $this->tpl = array();
         $this->tpl['content'] = '';
         $this->load->model('keyword_model', 'keyword');
     }
 
-    function index($offset=0) {
-        $this->load->helper('form');
-        $dd_keywords = $this->keyword->get_dropdown_keyword();
-
-        $this->tpl['keywords'] = $dd_keywords;
-        $this->tpl['styles'][] = 'css/wordcloud.css';
-        $this->tpl['styles'][] = 'css/visualize.css';
-        $this->tpl['javascripts'][] = 'js/jquery.visualize.js';
-        $this->tpl['javascripts'][] = 'js/jquery.visualize.tooltip.js';
-        $this->tpl['javascripts'][] = 'js/keyword.index.js';
-        $this->tpl['content'] = $this->load->view('keyword_index', $this->tpl, true);
+    function index($offset=0)
+    {
+        $this->load->helper('date');
+        $this->db->order_by('keyword');
+        $keywords = $this->db->get('tweet_keywords')->result();
+        
+        $this->tpl['keywords'] = $keywords;
+        $this->tpl['content'] = $this->load->view('keyword/default', $this->tpl, true);
         $this->load->view('body', $this->tpl);
     }
 
@@ -35,7 +34,8 @@ class Keyword extends CI_Controller {
      * Menghitung total tweet based on keyword and periode
      * @deprecated
      */
-    function count_tweet() {
+    function count_tweet()
+    {
         $keyword = $this->input->post('keyword', 1);
         $start = $this->input->post('start', 1);
         $end = $this->input->post('end', 1);
@@ -45,7 +45,8 @@ class Keyword extends CI_Controller {
     /**
      * Menghitung total user participated based on keyword and periode
      */
-    function count_user() {
+    function count_user()
+    {
         $keyword = $this->input->post('keyword', 1);
         $start = $this->input->post('start', 1);
         $end = $this->input->post('end', 1);
@@ -56,7 +57,8 @@ class Keyword extends CI_Controller {
     /**
      * menghasilkan cloud
      */
-    function get_cloud() {
+    function get_cloud()
+    {
         $keyword = $this->input->post('keyword', 1);
         $start = $this->input->post('start', 1);
         $end = $this->input->post('end', 1);
@@ -73,7 +75,8 @@ class Keyword extends CI_Controller {
     /**
      * Menghitung statistic
      */
-    function get_statistic() {
+    function get_statistic()
+    {
         $keyword = $this->input->post('keyword', 1);
         $start = $this->input->post('start', 1);
         $end = $this->input->post('end', 1);
@@ -81,7 +84,8 @@ class Keyword extends CI_Controller {
         $this->load->view('keyword_statistic', $this->tpl);
     }
 
-    function get_freq() {
+    function get_freq()
+    {
         $keyword = $this->input->post('keyword', 1);
         $start = $this->input->post('start', 1);
         $end = $this->input->post('end', 1);
@@ -89,7 +93,8 @@ class Keyword extends CI_Controller {
         $this->load->view('keyword_statistic', $this->tpl);
     }
 
-    function archieve($keyword_id=0) {
+    function archieve($keyword_id=0)
+    {
         $this->load->helper('form');
         $start = $this->uri->segment(4, date('Y-m-d'));
         $end = $this->uri->segment(5, date('Y-m-d'));
@@ -114,7 +119,8 @@ class Keyword extends CI_Controller {
         $this->load->view('body', $this->tpl);
     }
 
-    function download($start, $end) {
+    function download($start, $end)
+    {
         $keyword = $this->session->userdata('keyword');
         if ( $start && $end ) {
             $this->load->helper('download');
@@ -134,9 +140,10 @@ class Keyword extends CI_Controller {
         }
     }
 
-    function user($user_id,$start, $end) {
+    function user($user_id, $start, $end)
+    {
         $keyword = $this->session->userdata('keyword');
-        
+
         $sql = "
         SELECT
             t.created_at, t.screen_name, 
@@ -152,7 +159,7 @@ class Keyword extends CI_Controller {
             AND t.user_id = ?
         ORDER BY t.created_at DESC
         ";
-        $results = $this->db->query($sql, array($start, $end,$user_id))->result();
+        $results = $this->db->query($sql, array($start, $end, $user_id))->result();
         $this->tpl['tweets'] = $results;
         $this->tpl['content'] = $this->load->view('keyword_user', $this->tpl, true);
         $this->load->view('body', $this->tpl);
