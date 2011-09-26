@@ -2,7 +2,7 @@
     <div class="block_head">
         <div class="bheadl"></div>
         <div class="bheadr"></div>
-        <h2>Keywords</h2>
+        <h2>Keywords <?php echo $keyword ?></h2>
 		<div>
 			<form name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
 			<input type="submit" name="minus" value="Minus">

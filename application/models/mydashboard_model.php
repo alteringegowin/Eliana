@@ -21,12 +21,12 @@ class mydashboard_model extends CI_Model {
         FROM tweets t
             LEFT JOIN tweet_users tu ON tu.user_id=t.user_id
         WHERE 
-            t.tweet_text LIKE '%" . $this->db->escape_like_str($keyword) . "%'
+            t.tweet_text LIKE '%#" . $this->db->escape_like_str($keyword) . "%'
         ORDER BY t.created_at DESC LIMIT $offset,$limit
         ";
         $r['data'] = $this->db->query($sql)->result();
 		//$total = $this->db->query('SELECT FOUND_ROWS() as total')->row();
-        $total = $this->db->query("SELECT count(*) as total FROM `tweets` WHERE tweet_text LIKE '%" . $this->db->escape_like_str($keyword) . "%'")->row();
+        $total = $this->db->query("SELECT count(*) as total FROM `tweets` WHERE tweet_text LIKE '%#" . $this->db->escape_like_str($keyword) . "%'")->row();
         $r['total'] = $total->total;
         return $r;
     }
