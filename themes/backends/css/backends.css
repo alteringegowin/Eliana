@@ -543,7 +543,8 @@ a:hover {
     padding: 9px 12px;
     line-height: normal;
     margin-bottom: 10px;
-    font-size: 11px;
+    font-size: 12px;
+    font-weight: bold;
     -webkit-border-top-left-radius: 5px;
     -webkit-border-top-right-radius: 5px;
     -moz-border-radius-topleft: 5px;
@@ -1216,7 +1217,7 @@ form .block  input.submit.long:hover { background: url(../images/backends/btnb_.
     text-align: center;
     zoom: 1;
     overflow: visible;
-    
+
     border: 1px solid #DDD;
     font-weight: bold;
     color: #0073EA;

@@ -9,6 +9,12 @@
     <!-- block_content ends --> 
     <div class="block_content">
 
+        <?php if ( isset($breadcrumbs) ): ?>
+            <div class="breadcrumb">
+                <?php echo implode("&nbsp;&nbsp; &gt;&nbsp;&nbsp;", $breadcrumbs); ?>
+            </div>
+        <?php endif; ?>
+        
         <!-- table -->
         <table cellpadding="0" cellspacing="0" width="100%" class="">
             <thead>
@@ -22,7 +28,7 @@
 
             <tbody>
                 <?php $now = 0; ?>
-                <?php foreach ($tweets['data'] as $r): ?>
+                <?php foreach ($tweets as $r): ?>
 
                     <tr class="tr-">
                         <td>

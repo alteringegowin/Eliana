@@ -2,9 +2,11 @@
 if ( !defined('BASEPATH') )
     exit('No direct script access allowed');
 
-class keyword_model extends CI_Model {
+class keyword_model extends CI_Model
+{
 
-    function __construct() {
+    function __construct()
+    {
         parent::__construct();
     }
 
@@ -15,7 +17,8 @@ class keyword_model extends CI_Model {
      * @param int  $limit
      * @return array
      */
-    function get_keywords($offset = 0, $limit=25) {
+    function get_keywords($offset = 0, $limit=25)
+    {
         $sql = "
         SELECT SQL_CALC_FOUND_ROWS * FROM tweet_keywords 
         ORDER BY keyword
@@ -32,11 +35,13 @@ class keyword_model extends CI_Model {
      * @param int $keyword_id
      * @return obj 
      */
-    function get_keyword($keyword_id) {
+    function get_keyword($keyword_id)
+    {
         return $this->db->get_where('tweet_keywords', array('id' => $keyword_id))->row();
     }
 
-    function search_keyword($param=array()) {
+    function search_keyword($param=array())
+    {
         $def['keyword'] = '';
         $def['limit'] = 10;
         $def['offset'] = 0;
@@ -59,7 +64,37 @@ class keyword_model extends CI_Model {
         return $keywords;
     }
 
-    function get_statistic($keyword, $start, $end) {
+    function search_keyword_by_user_id($keyword, $user_id, $start, $end)
+    {
+
+        $sql = "
+        SELECT *
+        FROM tweets 
+        WHERE tweet_text  LIKE '%" . $this->db->escape_like_str($keyword) . "%'
+                AND user_id = ?
+                AND created_at BETWEEN ? AND ?
+        ORDER BY created_at DESC
+        ";
+        $keywords = $this->db->query($sql, array($user_id, $start, $end))->result();
+        return $keywords;
+    }
+
+    function search_keyword_by_date($keyword, $date)
+    {
+
+        $sql = "
+        SELECT *
+        FROM tweets 
+        WHERE tweet_text  LIKE '%" . $this->db->escape_like_str($keyword) . "%'
+                AND DATE(created_at) = ?
+        ORDER BY created_at DESC
+        ";
+        $keywords = $this->db->query($sql, array($date))->result();
+        return $keywords;
+    }
+
+    function get_statistic($keyword, $start, $end)
+    {
         $sql = "
         SELECT 
         count(*) as total_tweets, 
@@ -84,7 +119,8 @@ class keyword_model extends CI_Model {
         return $d;
     }
 
-    function get_cloud($keyword, $start, $end) {
+    function get_cloud($keyword, $start, $end)
+    {
         $sql = "
         SELECT 
         tweet_text
@@ -105,7 +141,8 @@ class keyword_model extends CI_Model {
         return array_reverse($words);
     }
 
-    function process_words($text, $forbidden=array(), $min_length=4) {
+    function process_words($text, $forbidden=array(), $min_length=4)
+    {
         $index = array();
         $forbidden = array('yang', 'kepada', 'http', 'cont', 'dengan', 'oleh',
             'kita', 'kamu', 'saya', 'tapi', 'this', 'that', 'lockerz'
@@ -143,7 +180,8 @@ class keyword_model extends CI_Model {
             }
         }
 
-        function cmp($a, $b) {
+        function cmp($a, $b)
+        {
             return ($a['count'] > $b['count']) ? +1 : -1;
         }
 
@@ -156,7 +194,8 @@ class keyword_model extends CI_Model {
         }
     }
 
-    function get_dropdown_keyword() {
+    function get_dropdown_keyword()
+    {
         $dd = array();
         $row = $this->db->get('tweet_keywords')->result();
         foreach ($row as $r) {
@@ -165,7 +204,8 @@ class keyword_model extends CI_Model {
         return $dd;
     }
 
-    function count_user($keyword, $start, $end) {
+    function count_user($keyword, $start, $end)
+    {
         $sql = "
             SELECT user_id, screen_name, count( `tweet_id` ) AS counted,
                 '$start' as dstart,
@@ -228,7 +268,8 @@ class keyword_model extends CI_Model {
         return $d;
     }
 
-    function count_tweet($keyword, $start, $end) {
+    function count_tweet($keyword, $start, $end)
+    {
         $sql = "
         SELECT 
             sum(followers_count) as followers,
@@ -244,7 +285,8 @@ class keyword_model extends CI_Model {
         return $r;
     }
 
-    function get_freq($keyword, $start, $end) {
+    function get_freq($keyword, $start, $end)
+    {
         $sql = "
         SELECT 
             count(tweet_id) as tweets,
@@ -259,6 +301,11 @@ class keyword_model extends CI_Model {
         ";
         $r = $this->db->query($sql, array($start, $end))->result();
         return $r;
+    }
+    
+    function get_user($user_id){
+        $this->db->where('user_id',$user_id);
+        return $this->db->get('tweet_users')->row();
     }
 
 }

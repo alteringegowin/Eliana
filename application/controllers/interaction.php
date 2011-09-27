@@ -14,19 +14,27 @@ class Interaction extends CI_Controller
             redirect('auth/login');
         }
 
-        $this->tpl = array();
+        $this->tpl['breadcrumbs'][] = anchor(site_url(), 'Dashboard');
+        $this->tpl['breadcrumbs'][] = anchor('keyword', 'Keywords');
         $this->tpl['content'] = '';
     }
 
-    function index($id=0)
+    function periode()
+    {
+        $start = $this->input->post('from');
+        $end = $this->input->post('to');
+        $keyword_id = $this->input->post('keyword_id');
+        redirect('interaction/index/' . $keyword_id . '/' . $start . '/' . $end);
+    }
+
+    function index($id=0, $start=0, $end=0)
     {
 
         $this->db->where('id', $id);
         $obj_keyword = $this->db->get('tweet_keywords')->row();
 
         $keyword = $obj_keyword->keyword;
-        $start = $this->input->post('from');
-        $end = $this->input->post('to');
+
 
         $ts_start = mktime(0, 0, 0, date('m'), date('d') - 7, date('Y'));
         $start = $start ? $start : date('Y-m-d', $ts_start);
@@ -54,26 +62,70 @@ class Interaction extends CI_Controller
         $this->tpl['users'] = $users;
         $this->tpl['interactions'] = $res;
         $this->tpl['javascripts'][] = 'js/interaction.js';
+
+        $this->tpl['breadcrumbs'][] = $keyword;
         $this->tpl['content'] = $this->load->view('interaction/default', $this->tpl, true);
         $this->load->view('body', $this->tpl);
     }
 
-    function tweet($keyword_id=0, $start='', $end='')
+    function tweet($keyword_id=0, $start, $end, $date)
     {
+        $this->load->model('keyword_model', 'keyword');
         $this->db->where('id', $keyword_id);
         $obj_keyword = $this->db->get('tweet_keywords')->row();
+        $keyword = $obj_keyword->keyword;
 
-        $this->load->model('keyword_model', 'keyword');
-        
-        
-        $param['keyword'] = $obj_keyword->keyword;
-        $param['start'] = $start;
-        $param['end'] = $end;
-        
-        $res = $this->keyword->search_keyword($param);
+        $res = $this->keyword->search_keyword_by_date($keyword, $date);
+
+        $this->tpl['breadcrumbs'][] = anchor('interaction/index/' . $keyword_id . '/' . $start . '/' . $end, $obj_keyword->keyword);
+        $this->tpl['breadcrumbs'][] = $date;
         $this->tpl['tweets'] = $res;
         $this->tpl['content'] = $this->load->view('interaction/tweet', $this->tpl, true);
         $this->load->view('body', $this->tpl);
+    }
+
+    function user($keyword_id=0, $user='', $start='', $end='')
+    {
+        $this->load->model('keyword_model', 'keyword');
+        $this->db->where('id', $keyword_id);
+        $obj_keyword = $this->db->get('tweet_keywords')->row();
+
+        $res = $this->keyword->search_keyword_by_user_id($obj_keyword->keyword, $user, $start, $end);
+        $tweet_user = $this->keyword->get_user($user);
+
+        $this->tpl['breadcrumbs'][] = anchor('interaction/index/' . $keyword_id . '/' . $start . '/' . $end, $obj_keyword->keyword);
+        $this->tpl['breadcrumbs'][] = $tweet_user->screen_name;
+        $this->tpl['tweets'] = $res;
+        $this->tpl['tweet_user'] = $tweet_user;
+        $this->tpl['content'] = $this->load->view('interaction/user', $this->tpl, true);
+        $this->load->view('body', $this->tpl);
+    }
+
+    function download($keyword_id=0, $start='', $end='')
+    {
+
+        $this->load->model('keyword_model', 'keyword');
+        $this->db->where('id', $keyword_id);
+        $obj_keyword = $this->db->get('tweet_keywords')->row();
+
+        $param['keyword'] = $obj_keyword->keyword;
+        $param['start'] = $start;
+        $param['end'] = $end;
+        $res = $this->keyword->search_keyword($param);
+
+        $this->load->library('table');
+        $this->table->set_heading('name', 'tweet', 'created', 'followers');
+
+
+        foreach ($res['data'] as $r) {
+            $this->table->add_row(
+                $r->screen_name, $r->tweet_text, $r->created_at, $r->followers_count
+            );
+        }
+        $filename = $param['keyword'] . '_' . $start . '_' . $end;
+        header("Content-type: application/x-msdownload");
+        header("Content-Disposition: attachment; filename=$filename.xls");
+        echo $this->table->generate();
     }
 
 }
