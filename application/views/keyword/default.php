@@ -13,7 +13,7 @@
                 <?php echo implode("&nbsp;&nbsp; &gt;&nbsp;&nbsp;", $breadcrumbs); ?>
             </div>
         <?php endif; ?>
-        
+
         <table id="sort-col2" cellpadding="0" cellspacing="0" width="100%">
             <thead>
                 <tr>
@@ -29,7 +29,7 @@
                     <tr>
                         <td><?php echo anchor('keyword/archieve/' . $r->id . '/', $r->keyword) ?></td>
                         <td><?php echo unix_to_human($r->keyword_date) ?></td>
-                        <td><?php echo anchor("interaction/index/". $r->id ,'Interaction Data','class="buttonUI"') ?></td>
+                        <td><?php echo anchor("interaction/index/" . $r->id, 'Interaction Data', 'class="buttonUI"') ?></td>
                         <td>&nbsp;</td>
                     </tr>
                 <?php endforeach; ?>
