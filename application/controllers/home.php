@@ -13,6 +13,7 @@ class Home extends CI_Controller {
         $this->load->model('home_model', 'home');
         $this->load->library('session');
         $this->load->helper('date');
+		$this->load->library('ion_auth');
         if ( !$this->session->userdata('is_login') ) {
             redirect('auth/login');
         }

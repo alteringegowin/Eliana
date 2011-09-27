@@ -14,12 +14,30 @@ class Mydashboard extends CI_Controller {
 		$this->load->model('mydashboard_model', 'mydashboard');
         $this->load->library('session');
         $this->load->helper('date');
-        if ( !$this->session->userdata('is_login') ) {
+		$this->load->library('ion_auth');
+		if (!$this->ion_auth->logged_in())
+		{
+			//redirect them to the login page
+			redirect('ionauth/login', 'refresh');
+		}
+        /*
+		if ( !$this->session->userdata('is_login') ) {
             redirect('auth/login');
         }
+		*/
     }
 
     function index() {
+		$iduser = $this->session->userdata('id');
+		if ($this->ion_auth->is_admin())
+		{
+			$show = 1;
+		}else{
+			$show = 0;
+		}
+		//get user log list
+	    $this->tpl['latestupdate'] = $this->mydashboard->get_userlatestupdate($show,$iduser);
+
         //get keywords
         $this->db->order_by('keyword');
         $keywords = $this->db->get('tweet_keywords')->result();
@@ -28,14 +46,17 @@ class Mydashboard extends CI_Controller {
         $this->tpl['acc'] = $acc;
         $this->tpl['keywords'] = $keywords;
         $this->tpl['content'] = $this->load->view('mydashboard_index', $this->tpl, true);
+
         $this->load->view('body', $this->tpl);
     }
 
 	function tweet($key_id='',$offset=0) {
+		$iduser = $this->session->userdata('id');
 		if(isset($_POST['positif'])){
 			$data = array('sentiment'=>'p');
 			if(isset($_POST['cid'])){
 				foreach($_POST['cid'] as $v){
+					$this->mydashboard->inputlog($iduser,$v,'p');
 					$this->mydashboard->updatesentiment($data,$v);
 				}
 			}
@@ -43,6 +64,7 @@ class Mydashboard extends CI_Controller {
 			$data = array('sentiment'=>'m');
 			if(isset($_POST['cid'])){
 				foreach($_POST['cid'] as $v){
+					$this->mydashboard->inputlog($iduser,$v,'m');
 					$this->mydashboard->updatesentiment($data,$v);
 				}
 			}
@@ -50,6 +72,7 @@ class Mydashboard extends CI_Controller {
 			$data = array('sentiment'=>'n');
 			if(isset($_POST['cid'])){
 				foreach($_POST['cid'] as $v){
+					$this->mydashboard->inputlog($iduser,$v,'n');
 					$this->mydashboard->updatesentiment($data,$v);
 				}
 			}
@@ -65,5 +88,48 @@ class Mydashboard extends CI_Controller {
         $this->tpl['content'] = $this->load->view('mydashboard_tweet', $this->tpl, true);
         $this->load->view('body', $this->tpl);
     }
+
+	function logs($id='',$offset=0) {
+		$iduser = $this->session->userdata('id');
+		if(isset($_POST['positif'])){
+			$data = array('sentiment'=>'p');
+			if(isset($_POST['cid'])){
+				foreach($_POST['cid'] as $v){
+					$this->mydashboard->inputlog($iduser,$v,'p');
+					$this->mydashboard->updatesentiment($data,$v);
+				}
+			}
+		}elseif(isset($_POST['minus'])){
+			$data = array('sentiment'=>'m');
+			if(isset($_POST['cid'])){
+				foreach($_POST['cid'] as $v){
+					$this->mydashboard->inputlog($iduser,$v,'m');
+					$this->mydashboard->updatesentiment($data,$v);
+				}
+			}
+		}elseif(isset($_POST['netral'])){
+			$data = array('sentiment'=>'n');
+			if(isset($_POST['cid'])){
+				foreach($_POST['cid'] as $v){
+					$this->mydashboard->inputlog($iduser,$v,'n');
+					$this->mydashboard->updatesentiment($data,$v);
+				}
+			}
+		}
+
+		$this->tpl['username'] = $this->ion_auth->get_user($id);
+		$limit =10;
+        $logs = $this->mydashboard->get_logs($id, $offset, $limit);
+		$this->tpl['logs'] = $logs['data'];
+		$this->tpl['pagination'] = create_pagination('/mydashboard/logs/' . $id, $logs['total'], $limit, 4);
+        $this->tpl['content'] = $this->load->view('mydashboard_log', $this->tpl, true);
+        $this->load->view('body', $this->tpl);
+    }
+
+	function user() {
+		$this->tpl['users'] = $this->ion_auth->get_users_array();
+		$this->tpl['content'] = $this->load->view('mydashboard_user', $this->tpl, true);
+			$this->load->view('body', $this->tpl);
+	}
 
 }
