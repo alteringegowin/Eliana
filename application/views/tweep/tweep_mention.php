@@ -4,9 +4,16 @@
         <div class="bheadr"></div>
 
         <h2>Mention: <?php echo $tweep->screen_name ?></h2>
-        <?php $this->load->view('tweep_header_menu'); ?>
+        <?php $this->load->view('tweep/tweep_header_menu'); ?>
     </div>
     <div class="block_content">
+        
+        <?php if ( isset($breadcrumbs) ): ?>
+            <div class="breadcrumb">
+                <?php echo implode("&nbsp;&nbsp; &gt;&nbsp;&nbsp;", $breadcrumbs); ?>
+            </div>
+        <?php endif; ?>
+        
         <!-- table -->
         <table cellpadding="0" cellspacing="0" width="100%" class="">
             <thead>

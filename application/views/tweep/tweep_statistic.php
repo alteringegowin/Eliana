@@ -3,10 +3,16 @@
         <div class="bheadl"></div>
         <div class="bheadr"></div>
 
-        <h2><?php echo $tweep->screen_name ?></h2>
-        <?php $this->load->view('tweep_header_menu'); ?>
+        <h2>Last Status: <?php echo $tweep->screen_name ?></h2>
+        <?php $this->load->view('tweep/tweep_header_menu'); ?>
     </div>
     <div class="block_content">
+
+        <?php if ( isset($breadcrumbs) ): ?>
+            <div class="breadcrumb">
+                <?php echo implode("&nbsp;&nbsp; &gt;&nbsp;&nbsp;", $breadcrumbs); ?>
+            </div>
+        <?php endif; ?>
 
         <form action="<?php echo current_url() ?>" method="post" id="frm-tweep-statistic">
             <div style="padding:4px;">
