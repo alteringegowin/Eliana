@@ -15,6 +15,7 @@ class Keyword extends CI_Controller
         }
 
         $this->tpl = array();
+        $this->tpl['breadcrumbs'][] = anchor('','Dashboard');
         $this->tpl['content'] = '';
         $this->load->model('keyword_model', 'keyword');
     }
@@ -26,6 +27,7 @@ class Keyword extends CI_Controller
         $keywords = $this->db->get('tweet_keywords')->result();
         
         $this->tpl['keywords'] = $keywords;
+        $this->tpl['breadcrumbs'][] = 'Keywords';
         $this->tpl['content'] = $this->load->view('keyword/default', $this->tpl, true);
         $this->load->view('body', $this->tpl);
     }

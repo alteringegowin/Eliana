@@ -8,6 +8,12 @@
     <!-- block_content ends --> 
     <div class="block_content">
 
+        <?php if ( isset($breadcrumbs) ): ?>
+            <div class="breadcrumb">
+                <?php echo implode("&nbsp;&nbsp; &gt;&nbsp;&nbsp;", $breadcrumbs); ?>
+            </div>
+        <?php endif; ?>
+        
         <table id="sort-col2" cellpadding="0" cellspacing="0" width="100%">
             <thead>
                 <tr>
