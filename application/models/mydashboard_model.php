@@ -8,7 +8,7 @@ class mydashboard_model extends CI_Model {
         parent::__construct();
     }
 
-	function get_tweet($keyword, $offset, $limit) {
+	function get_tweet($keyword, $offset, $limit = 10) {
         $sql = "
         SELECT
             t.created_at, t.screen_name, 
@@ -54,7 +54,7 @@ class mydashboard_model extends CI_Model {
         SELECT u.id,u.username,t.log_date,g.description FROM users u, logs t, groups g
 		WHERE log_date = (SELECT MAX(log_date)
                  FROM logs t WHERE u.id = t.userid) ".$filter." AND g.id = u.group_id
-        ORDER BY u.username";
+        GROUP BY username ORDER BY u.username";
         $result = $this->db->query($sql)->result();
 		return $result;
     }
@@ -129,4 +129,23 @@ class mydashboard_model extends CI_Model {
 	{
 		$ok = $this->db->update('tweets',$data,array('tweet_id'=>$id));
 	}
+
+	function count_sentiment_per_tanggal($keyword, $start, $end) {
+
+        $sql = "
+        SELECT 
+            DATE(  `created_at` ) AS tanggal,
+			COUNT(  `sentiment` ) AS jumlah,
+			`sentiment` AS sentiment
+		FROM `tweets` 
+        WHERE 
+            `tweet_text` LIKE '%#" . $this->db->escape_like_str($keyword) . "%'
+             AND created_at BETWEEN ? AND ?
+        GROUP BY tanggal, sentiment
+        ORDER BY tanggal ASC
+        ";
+
+        $stats = $this->db->query($sql, array($start, $end))->result();
+        return $stats;
+    }
 }

@@ -11,7 +11,7 @@ class Interaction extends CI_Controller
     {
         parent::__construct();
         if ( !$this->session->userdata('is_login') ) {
-            redirect('auth/login');
+            redirect('ionauth/login');
         }
 
         $this->tpl['breadcrumbs'][] = anchor(site_url(), 'Dashboard');

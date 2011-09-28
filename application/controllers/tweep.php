@@ -19,7 +19,7 @@ class Tweep extends CI_Controller
         parent::__construct();
         $this->load->helper('time');
         if ( !$this->session->userdata('is_login') ) {
-            redirect('auth/login');
+            redirect('ionauth/login');
         }
 
         $this->tpl = array();

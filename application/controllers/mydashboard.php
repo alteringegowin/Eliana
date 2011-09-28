@@ -20,11 +20,6 @@ class Mydashboard extends CI_Controller {
 			//redirect them to the login page
 			redirect('ionauth/login', 'refresh');
 		}
-        /*
-		if ( !$this->session->userdata('is_login') ) {
-            redirect('auth/login');
-        }
-		*/
     }
 
     function index() {
@@ -47,6 +42,21 @@ class Mydashboard extends CI_Controller {
         $this->tpl['keywords'] = $keywords;
         $this->tpl['content'] = $this->load->view('mydashboard_index', $this->tpl, true);
 
+        $this->load->view('body', $this->tpl);
+    }
+
+	function statistic($keyword) {
+		$start = $this->input->post('start');
+		$end = $this->input->post('end');
+		$stats = array();
+		if(isset($_POST['view'])){
+			$stats = $this->mydashboard->count_sentiment_per_tanggal($keyword, $start, $end);	
+		}
+
+		$this->tpl['javascripts'][] = 'js/tweep.statistic.js';
+        $this->tpl['keyword'] = $keyword;
+		$this->tpl['stats'] = $stats;
+        $this->tpl['content'] = $this->load->view('mydashboard_statistic', $this->tpl, true);
         $this->load->view('body', $this->tpl);
     }
 

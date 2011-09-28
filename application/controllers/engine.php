@@ -9,7 +9,7 @@ class Engine extends CI_Controller {
         $this->tpl = array();
         $this->config->load('engine');
         if ( !$this->session->userdata('is_login') ) {
-            redirect('auth/login');
+            redirect('ionauth/login');
         }
         
     }

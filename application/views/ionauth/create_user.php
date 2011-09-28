@@ -1,4 +1,4 @@
-<div class="block small center">
+<div class="block center">
     <div class="block_head">
         <div class="bheadl"></div>
         <div class="bheadr"></div>
