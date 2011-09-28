@@ -41,7 +41,13 @@
                             <div class="twitter-text"><?php echo $r->created_at ?></div>
                         </td>
                         <td><?php echo $r->followers_count ?></td>
-						<td><?php echo $r->sentiment ?></td>
+						<td>
+							<?php 
+								if($r->sentiment == 'm'){echo 'minus';}
+								elseif($r->sentiment == 'n'){echo 'netral';}
+								elseif($r->sentiment == 'p'){echo 'positif';}
+							?>
+						</td>
                     </tr>
                 <?php endforeach; endif;?>
             </tbody>

@@ -107,6 +107,9 @@ class Ionauth extends Controller {
             if ($this->ion_auth->login($this->input->post('email'), $this->input->post('password')))
 			{
                 $this->session->set_userdata('is_login', true);
+				$iduser = $this->session->userdata('id');
+				$data = array('userid'=>$iduser, 'log_date'=>date('Y-m-d H:i:s'), 'action'=>'logged in');
+				$ok = $this->db->insert('logs',$data);
                 redirect('home');
             }				
 		}
