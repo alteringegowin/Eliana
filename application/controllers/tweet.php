@@ -32,12 +32,14 @@ class Tweet extends CI_Controller
         $tweets = $this->tweet->get_tweet_by_keyword($keyword_text, array(), $paging_param);
 
 
-        $pagination = create_pagination('tweet/index', $tweets['total'], $paging_param['limit'], 4);
+        $pagination = create_pagination('tweet/index/'.$keyword_id, $tweets['total'], $paging_param['limit'], 5);
 
-        $no = $limit * $offset;
+        $no = $paging_param['limit'] * $paging_param['offset'];
         $this->tpl['keyword_string'] = $keyword_text;
         $this->tpl['breadcrumbs'][] = $keyword_text;
         $this->tpl['pagination'] = $pagination;
+        $this->tpl['tweets'] = $tweets;
+        $this->tpl['no'] = $no;
         $this->tpl['content'] = $this->load->view('tweet/default', $this->tpl, true);
         $this->load->view('body', $this->tpl);
     }

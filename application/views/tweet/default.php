@@ -24,10 +24,18 @@
 
             <tbody>
                 <?php foreach ($tweets['data'] as $r): ?>
-                <td><?php ++$no; ?></td>
-                <td><img src="<?php echo $r->profile_image_url?>"/></td>
-                <td><img src="<?php echo $r->profile_image_url?>"/></td>
-            <?php endforeach; ?>
+                    <tr>
+                        <td><?php ++$no; ?></td>
+                        <td><img src="<?php echo $r->profile_image_url ?>"/></td>
+                        <td>
+                            <div class="twitter-sender">
+                                <strong><?php echo $r->screen_name ?></strong>
+                                (<?php echo $r->name ?>)</div>
+                            <div class="twitter-text"><?php echo $r->tweet_text ?></div>
+                            <div class="twitter-text"><?php echo $r->created_at ?></div>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
 
             </tbody>
 
