@@ -3,8 +3,10 @@
         <div class="bheadl"></div>
         <div class="bheadr"></div>
         <h2>Keywords <?php echo $keyword ?></h2>
+		<div>
+		<?php $this->load->view('mydashboard/header_sentiment'); ?>
+		</div>
 		<div align="right">
-			<a href="<?php echo site_url('mydashboard/statistic/'.$keyword) ?>">Statistic </a>
 			<form name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
 			<input type="submit" name="minus" value="Minus">
 			<input type="submit" name="netral" value="Netral">
