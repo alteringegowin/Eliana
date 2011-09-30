@@ -27,7 +27,7 @@
                 <?php $i = 1; ?>
                 <?php foreach ($keywords as $r): ?>
                     <tr>
-                        <td><?php echo anchor('keyword/archieve/' . $r->id . '/', $r->keyword) ?></td>
+                        <td><?php echo anchor('interaction/index/' . $r->id , $r->keyword) ?></td>
                         <td><?php echo unix_to_human($r->keyword_date) ?></td>
                         <td><?php echo anchor("interaction/index/" . $r->id, 'Interaction Data', 'class="buttonUI"') ?></td>
                         <td>&nbsp;</td>

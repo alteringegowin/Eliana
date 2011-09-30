@@ -1,37 +1,27 @@
 <?php
-include_once 'phirehose.php';
+define('TWITTER_CONSUMER_KEY', 'ZKSdAZ5goWFmTOn3YfUbTQ');
+define('TWITTER_CONSUMER_SECRET', '1nCxAnI1zl7HFx9m5R5vFS6rLWNK7AgFn9Y0IrDKnk');
+define('OAUTH_TOKEN', '26401725-Z5LqY3JeHN7fQrzNxI53PrPxXeZ2bvw18MvLHL7wM');
+define('OAUTH_SECRET', 'FNUsmerJp6Blj1URGR03a4dHQ2rONpoSYOkMCR425E');
+require_once(APPPATH . 'third_party/lib/Phirehose.php');
+require_once(APPPATH . 'third_party/lib/OauthPhirehose.php');
 
-// External URL for Javascript code in browsers to call the framework with Ajax
-define('AJAX_URL', 'http://erwin.think.web.id/140dev/');
-
-// Basic authorization settings for connecting to the Twitter streaming API
-// Fill in the values for a valid Twitter account
-define('STREAM_ACCOUNT', 'MandaBoobs');
-define('STREAM_PASSWORD', 'cinta.tivi');
-
-// MySQL time zone setting to normalize dates
-define('TIME_ZONE', 'Asia/Jakarta');
-
-// Settings for monitor_tweets.php
-define('TWEET_ERROR_INTERVAL', 10);
-// Fill in the email address for error messages
-define('TWEET_ERROR_ADDRESS', '*****');
-
-class Consumer extends Phirehose {
+class Consumer extends OauthPhirehose
+{
 
     protected $CI;
 
-    function __construct() {
-        parent::__construct(STREAM_ACCOUNT, STREAM_PASSWORD, Phirehose::METHOD_FILTER);
-
+    function __construct()
+    {
+        parent::__construct(OAUTH_TOKEN, OAUTH_SECRET, Phirehose::METHOD_FILTER);
         $this->CI = & get_instance();
     }
 
-    public function enqueueStatus($status) {
-        $tweet_object = json_decode($status);
-        $tweet_id = $tweet_object->id_str;
-
-        $raw_tweet = base64_encode(serialize($tweet_object));
+    public function enqueueStatus($status)
+    {
+        $data = json_decode($status);
+        $tweet_id = $data->id_str;
+        $raw_tweet = base64_encode(serialize($data));
 
         $field['raw_tweet'] = $raw_tweet;
         $field['tweet_id'] = $tweet_id;

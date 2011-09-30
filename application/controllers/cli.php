@@ -14,21 +14,20 @@ class Cli extends CI_Controller
 
     function eliana_get_tweet()
     {
-        $this->load->library('consumer');
         $res = $this->db->query('SELECT keyword FROM tweet_keywords')->result();
         $keyword = array();
         foreach ($res as $r) {
             $keyword[] = $r->keyword;
         }
 
-        $res = $this->db->query('SELECT user_id FROM tweet_follow')->result();
+        $res = $this->db->query('SELECT screen_name FROM tweet_follow')->result();
         $users = array();
         foreach ($res as $r) {
-            $users[] = $r->user_id;
+            $keyword[] = $r->screen_name;
         }
 
+        $this->load->library('consumer');
         $this->consumer->setTrack($keyword);
-        $this->consumer->setFollow($users);
         $this->consumer->consume();
     }
 
