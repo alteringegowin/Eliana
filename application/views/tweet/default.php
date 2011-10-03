@@ -16,7 +16,7 @@
         <table cellpadding="0" cellspacing="0" width="100%" class="">
             <thead>
                 <tr>
-                    <th>#</th>
+                    <th width="10"><input type="checkbox" class="check_all"></th>
                     <th>photo</th>
                     <th>Tweet</th>
                 </tr>
@@ -25,7 +25,7 @@
             <tbody>
                 <?php foreach ($tweets['data'] as $r): ?>
                     <tr>
-                        <td><?php ++$no; ?></td>
+                        <td><input type="checkbox"></td>
                         <td><img src="<?php echo $r->profile_image_url ?>"/></td>
                         <td>
                             <div class="twitter-sender">
@@ -41,7 +41,16 @@
 
         </table>
         <!-- /table -->
+        <div class="tableactions">
+            <select>
+                <option value="">------</option>
+                <option value="p">Positive</option>
+                <option value="n">Negative</option>
+                <option value="a">Ask</option>
+            </select>
 
+            <input type="submit" class="submit tiny" value="Apply to selected">
+        </div>
         <!-- pagination ends -->
         <div class="pagination right">
             <?php echo $pagination; ?>

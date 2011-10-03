@@ -22,6 +22,7 @@ class Tweet_model extends CI_Model
             $this->db->where("tweets.created_at BETWEEN '" . $periode['end'] . "' AND '" . $periode['end'] . "'");
         }
 
+        $this->db->order_by('created_at', 'DESC');
         $this->db->like('tweets.tweet_text', $keyword);
         $res['data'] = $this->db->get('tweets')->result();
 
@@ -52,6 +53,24 @@ class Tweet_model extends CI_Model
         }
         $res['total'] = $this->db->get('tweets')->num_rows();
         return $res;
+    }
+
+    /**
+     * Setting Sentiment
+     * 
+     * @author erwin 
+     * @param type $sentiment
+     * @param type $array_tweet_id 
+     */
+    function set_tweet_sentiment($sentiment, $tweet_id)
+    {
+        $db['sentiment'] = $sentiment;
+        if ( is_array($tweet_id) ) {
+            $this->db->where_in('tweet_id', $tweet_id);
+        } else {
+            $this->db->where('tweet_id', $tweet_id);
+        }
+        $this->db->update('tweets', $db);
     }
 
 }
