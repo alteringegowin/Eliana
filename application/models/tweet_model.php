@@ -10,7 +10,7 @@ class Tweet_model extends CI_Model
         parent::__construct();
     }
 
-    function get_tweet_by_keyword($keyword, $periode=array(), $paging=array())
+    function get_tweet_by_keyword($keyword, $periode=array(), $paging=array(), $sentiment='')
     {
         if ( $paging ) {
             $paging['limit'] = isset($paging['limit']) ? $paging['limit'] : 25;
@@ -18,6 +18,9 @@ class Tweet_model extends CI_Model
             $this->db->limit($paging['limit'], $paging['offset']);
         }
 
+        if ( $sentiment ) {
+            $this->db->where('sentiment', $sentiment);
+        }
         if ( $periode ) {
             $this->db->where("tweets.created_at BETWEEN '" . $periode['end'] . "' AND '" . $periode['end'] . "'");
         }
@@ -26,6 +29,9 @@ class Tweet_model extends CI_Model
         $this->db->like('tweets.tweet_text', $keyword);
         $res['data'] = $this->db->get('tweets')->result();
 
+        if ( $sentiment ) {
+            $this->db->where('sentiment', $sentiment);
+        }
         if ( $periode ) {
             $this->db->where("tweets.created_at BETWEEN '" . $periode['end'] . "' AND '" . $periode['end'] . "'");
         }

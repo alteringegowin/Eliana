@@ -1273,3 +1273,24 @@ input.submit.tiny {
     width: 105px;
     word-spacing: 0px;
 }
+
+
+.sentiment-p{
+    color:#508600;
+    font-weight: bold;
+}
+
+.sentiment-n{
+    color: #0888c3;
+    font-weight: bold;
+}
+
+.sentiment-m{
+    color:#e3302c;
+    font-weight: bold;
+}
+
+.sentiment-a{
+    color: #f6a828;
+    font-weight: bold;
+}
