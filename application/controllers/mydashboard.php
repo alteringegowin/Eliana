@@ -53,11 +53,26 @@ class Mydashboard extends CI_Controller {
 			$stats = $this->mydashboard->count_sentiment_per_tanggal($keyword, $start, $end);	
 		}
 
-		$this->tpl['javascripts'][] = 'js/tweep.statistic.js';
+        $this->tpl['styles'][] = 'css/visualize.css';
+        $this->tpl['javascripts'][] = 'js/jquery.visualize.js';
+        $this->tpl['javascripts'][] = 'js/jquery.visualize.tooltip.js';
+        $this->tpl['javascripts'][] = 'js/mydashboard.js';
         $this->tpl['keyword'] = $keyword;
 		$this->tpl['stats'] = $stats;
         $this->tpl['content'] = $this->load->view('mydashboard_statistic', $this->tpl, true);
         $this->load->view('body', $this->tpl);
+    }
+
+	function sentiment_bar($keyword)
+    {
+        $start = $this->input->post('start');
+        $end = $this->input->post('end');
+		//$start = '2011-09-01';
+		//$end = '2011-09-30';
+
+        $stats = $this->mydashboard->count_sentiment_per_tanggal($keyword, $start, $end);
+        $this->tpl['stats'] = $stats;
+        $this->load->view('mydashboard/sentiment_bar', $this->tpl);
     }
 
 	function tweet($key_id='',$offset=0) {
