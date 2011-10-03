@@ -3,9 +3,9 @@
     <div class="block_head">
         <div class="bheadl"></div>
         <div class="bheadr"></div>
-        <h2>Keywords : <?php echo $keyword ?></h2>
-        <form action="" method="post">
-            <input type="text" class="text" value="Search">
+        <h2>DATABASE TWEEPS</h2>
+        <form action="<?php echo site_url('grabuser/search') ?>" method="post">
+            <input type="text" class="text" name="q" value="Search">
         </form>
     </div>
 
@@ -20,11 +20,11 @@
 
 
         <!-- table -->
-        <form action="" method="post">
+        <form action="<?php echo site_url('grabuser/post_sex') ?>" method="post">
             <table cellpadding="0" cellspacing="0" width="100%" class="">
                 <thead>
                     <tr>
-                        <th width="10"><input type="checkbox" class="check_all"></th>
+                        <th width="10"><input type="checkbox"  class="check_all"></th>
                         <th>photo</th>
                         <th>Screen Name (nama)</th>
                         <th>Sex</th>
@@ -39,7 +39,7 @@
                 <tbody>
                     <?php foreach ($users as $r): ?>
                         <tr>
-                            <td><input type="checkbox"></td>
+                            <td><input type="checkbox" name="user_id[]" value="<?php echo$r->user_id ?>"></td>
                             <td>
                                 <img height="48" width="48" src="<?php echo $r->profile_image_url ?>" alt="<?php echo $r->profile_image_url ?>" class="user-profile-link">
                             </td>
@@ -64,7 +64,7 @@
             <!-- /table -->
 
             <div class="tableactions">
-                <select>
+                <select name="sex">
                     <option>------</option>
                     <option value="m">Male</option>
                     <option value="f">Female</option>

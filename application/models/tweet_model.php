@@ -73,4 +73,11 @@ class Tweet_model extends CI_Model
         $this->db->update('tweets', $db);
     }
 
+    function set_tweep_sex($sex, $user_id_array=array())
+    {
+        $db['sex'] = $sex;
+        $this->db->where_in('user_id', $user_id_array);
+        $this->db->update('tweet_users', $db);
+    }
+
 }

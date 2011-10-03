@@ -36,6 +36,11 @@ $(document).ready(function(){
     $(".sortable").tablesorter( {
         sortList: [[1,0]]
     }); 
-        
+    $('.check_all').click(function() {
+        $(this).parents('form').find('input:checkbox').attr('checked', $(this).is(':checked'));   
+    });
 
+    $('.block .block_head form .text').bind('click', function() {
+        $(this).attr('value', '');
+    });
 });
