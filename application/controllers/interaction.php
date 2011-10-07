@@ -128,4 +128,29 @@ class Interaction extends CI_Controller
         echo $this->table->generate();
     }
 
+	function sentimentstat($id=0, $start=0, $end=0)
+    {
+        $this->db->where('id', $id);
+        $obj_keyword = $this->db->get('tweet_keywords')->row();
+
+        $keyword = $obj_keyword->keyword;
+
+        $ts_start = mktime(0, 0, 0, date('m'), date('d') - 7, date('Y'));
+        $start = $start ? $start : date('Y-m-d', $ts_start);
+        $end = $end ? $end : date('Y-m-d');
+		
+		$this->load->model('mydashboard_model', 'mydashboard');
+        $stats = $this->mydashboard->count_sentiment_per_tanggal($keyword, $start, $end);
+		
+		$this->tpl['styles'][] = 'css/visualize.css';
+        $this->tpl['javascripts'][] = 'js/jquery.visualize.js';
+        $this->tpl['javascripts'][] = 'js/jquery.visualize.tooltip.js';
+        $this->tpl['javascripts'][] = 'js/sentiment.js';
+        $this->tpl['keyword'] = $keyword;
+        $this->tpl['stats'] = $stats;
+		$this->tpl['breadcrumbs'][] = $keyword;
+        $this->tpl['content'] = $this->load->view('mydashboard/sentiment_bar', $this->tpl, true);
+        $this->load->view('body', $this->tpl);
+    }
+
 }

@@ -1,3 +1,17 @@
+<div class="block">
+    <div class="block_head">
+        <div class="bheadl"></div>
+        <div class="bheadr"></div>
+        <h2>Keywords : <?php echo $keyword ?></h2>
+    </div>
+    <div class="block_content">
+
+		<?php if ( isset($breadcrumbs) ): ?>
+            <div class="breadcrumb">
+                <?php echo implode("&nbsp;&nbsp; &gt;&nbsp;&nbsp;", $breadcrumbs); ?>
+            </div>
+        <?php endif; ?>
+
 <h2>Sentiment Data</h2>
 <table cellpadding="0" cellspacing="0" width="100%" class="">
 				<?php if($stats): ?>
@@ -65,7 +79,6 @@
 				<?php endif; ?>
 			</table>
 <br/>
-
 
 <h2>Sentiment Graph</h2>
             <table class="stats" rel="bar" cellpadding="0" cellspacing="0" width="100%"> 
@@ -163,3 +176,11 @@
 				</tbody>
 				<?php endif; ?>
 			</table>
+
+	</div>		
+    <!-- .block_content ends -->
+
+    <div class="bendl"></div>
+    <div class="bendr"></div>
+
+</div>

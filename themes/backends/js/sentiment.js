@@ -1,29 +1,6 @@
-$(function () {
-    
-    var siteUrl = $("meta[name=site_url]").attr('content');
-    $(".datepicker").datepicker({
-        dateFormat:'yy-mm-dd'
-    });
-
-    $("#btn-keyword-submit").click(function(){
-        
-        var data = $("#frm-tweep-statistic").serialize();
-		var keyword = $("#input-keyword").val();
-        var urlBar = siteUrl+'/mydashboard/sentiment_bar/'+keyword;
-
-        
-        $.when(
-            $.post(urlBar,data)
-            
-            ).done(
-            function(stats){
-                $("#tweep-growth").html(stats);
-
-
-
-
-                // Web stats
-                $('table.stats').each(function() {
+// Run the script on DOM ready:
+$(function(){
+	$('table.stats').each(function() {
                     if($(this).attr('rel')) {
                         var statsType = $(this).attr('rel');
                     } else {
@@ -60,10 +37,4 @@ $(function () {
                         });
                     }
                 });
-            
-            });
-        return false;
-    });
-
-
 });

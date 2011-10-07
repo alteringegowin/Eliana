@@ -42,6 +42,10 @@
                 <div>Total Impression</div>
                 <div class="number"><?php echo number_format($total['impression']) ?></div>
             </div>
+			<div class="statistic-num" style="width: 90px;">
+
+                <a href="<?php echo site_url('interaction/sentimentstat/'. $keyword_id . '/' . $start . '/' . $end )?>" class="buttonUI">Sentiment</a>
+            </div>
             <div class="clear"></div>
 
 
