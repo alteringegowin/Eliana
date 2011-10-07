@@ -11,6 +11,9 @@ class Engine extends CI_Controller {
         if ( !$this->session->userdata('is_login') ) {
             redirect('ionauth/login');
         }
+        if ( $this->session->userdata('group_id') != 1) {
+            redirect('');
+        }
         
     }
 
