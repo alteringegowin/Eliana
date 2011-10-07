@@ -10,7 +10,7 @@ class Log_model extends CI_Model
         parent::__construct();
     }
 
-    function save_log($user_id, $action,$mode=1, $tweet_id='')
+    function save_log($user_id, $action, $mode=1, $tweet_id='')
     {
         $db['userid'] = $user_id;
         $db['log_date'] = date('Y-m-d H:i:s');

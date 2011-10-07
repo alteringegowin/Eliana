@@ -5,10 +5,10 @@
         <h2>Keyword : <?php echo $keyword_string ?></h2>
         <ul>
             <li><?php echo anchor('tweet/index/' . $keyword_id, 'All') ?></li>
-            <li><?php echo anchor('tweet/sentiment/' . $keyword_id.'/p/', 'Positive') ?></li>
-            <li><?php echo anchor('tweet/sentiment/' . $keyword_id.'/m/', 'Negative') ?></li>
-            <li><?php echo anchor('tweet/sentiment/' . $keyword_id.'/n/', 'Netral') ?></li>
-            <li><?php echo anchor('tweet/sentiment/' . $keyword_id.'/a/', 'Ask') ?></li>
+            <li><?php echo anchor('tweet/sentiment/' . $keyword_id . '/p/', 'Positive') ?></li>
+            <li><?php echo anchor('tweet/sentiment/' . $keyword_id . '/m/', 'Negative') ?></li>
+            <li><?php echo anchor('tweet/sentiment/' . $keyword_id . '/n/', 'Netral') ?></li>
+            <li><?php echo anchor('tweet/sentiment/' . $keyword_id . '/a/', 'Ask') ?></li>
         </ul>
     </div>
     <div class="block_content">
@@ -18,7 +18,8 @@
                 <?php echo implode("&nbsp;&nbsp; &gt;&nbsp;&nbsp;", $breadcrumbs); ?>
             </div>
         <?php endif; ?>
-
+        
+        
         <form action="<?php echo site_url('tweet/post_sentiment') ?>" method="post">
             <!-- table -->
             <table cellpadding="0" cellspacing="0" width="100%" class="">
