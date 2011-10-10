@@ -19,24 +19,44 @@
             </div>
         <?php endif; ?>
         
-        
-        <form action="<?php echo site_url('tweet/post_sentiment') ?>" method="post">
+		<form action="<?php echo site_url('tweet/index/'.$keyword_id) ?>" method="post" id="frm-tweep-statistic">
+            <div style="padding:4px;">
+                <div style="float: left;width:280px;">
+                    <label>Start:</label>
+                    <input type="text" class="text tiny datepicker" name="start" value="<?php echo $start ?>"/>
+                </div>
+                <div style="float: left; width: 280px;">
+                    <label>End:</label>
+                    <input type="text" class="text tiny datepicker" name="end" value="<?php echo $end ?>"/>
+                </div>
+                <div style="float: left;">
+					<input type="hidden" name="keyword" value="<?php echo $keyword_string ?>" id="input-keyword"/>
+                    <input type="submit" class="submit small" name="view" id="btn-keyword-submit" value="View" />
+                </div>
+                <div style="clear:both;"></div>
+            </div>
+        </form>
+		<script>
+		$(".datepicker").datepicker({
+			dateFormat:'yy-mm-dd'
+		});
+        </script>
+        <form>
             <!-- table -->
             <table cellpadding="0" cellspacing="0" width="100%" class="">
                 <thead>
                     <tr>
-                        <th width="10"><input type="checkbox" class="check_all"></th>
                         <th>photo</th>
                         <th>Tweet</th>
                         <th>Followers</th>
                         <th>Sentiment</th>
+						<th colspan="4">Options</th>
                     </tr>
                 </thead>
 
                 <tbody>
                     <?php foreach ($tweets['data'] as $r): ?>
                         <tr>
-                            <td><input type="checkbox" name="user_id[]" value="<?php echo $r->tweet_id ?>"></td>
                             <td><img src="<?php echo $r->profile_image_url ?>"/></td>
                             <td>
                                 <div class="twitter-sender">
@@ -47,6 +67,18 @@
                             </td>
                             <td><?php echo $r->followers_count ?></td>
                             <td><span class="sentiment-<?php echo $r->sentiment ?>"><?php echo sentiment($r->sentiment) ?></span></td>
+							<td>
+							<input class="submit small" type="button" name="minus" value="negatif" onclick="callAjaxSentiment('<?php echo $r->tweet_id ?>','m');" />
+							</td>
+							<td>
+							<input class="submit small" type="button" name="netral" value="netral" onclick="callAjaxSentiment('<?php echo $r->tweet_id ?>','n');" />
+							</td>
+							<td>
+							<input class="submit small" type="button" name="positif" value="positif" onclick="callAjaxSentiment('<?php echo $r->tweet_id ?>','p');" />
+							</td>
+							<td>
+							<input class="submit small" type="button" name="ask" value="ask" onclick="callAjaxSentiment('<?php echo $r->tweet_id ?>','a');" />
+							</td>
                         </tr>
                     <?php endforeach; ?>
 
@@ -54,18 +86,6 @@
 
             </table>
             <!-- /table -->
-            <div class="tableactions">
-                <select name="sentiment">
-                    <option value="">------</option>
-                    <option value="p">Positive</option>
-                    <option value="m">Negative</option>
-                    <option value="n">Netral</option>
-                    <option value="a">Ask</option>
-                </select>
-
-                <input type="submit" class="submit tiny" value="Apply to selected">
-            </div>
-
         </form>
         <!-- pagination ends -->
         <div class="pagination right">

@@ -18,24 +18,32 @@ class Tweet_model extends CI_Model
             $this->db->limit($paging['limit'], $paging['offset']);
         }
 
+		if ( $keyword ) {
+            $this->db->where("tweets.tweet_text LIKE '%#".$keyword."%'");
+        }
         if ( $sentiment ) {
             $this->db->where('sentiment', $sentiment);
         }
         if ( $periode ) {
-            $this->db->where("tweets.created_at BETWEEN '" . $periode['end'] . "' AND '" . $periode['end'] . "'");
+            $this->db->where("tweets.created_at BETWEEN '" . $periode['start'] . "' AND '" . $periode['end'] . "'");
         }
 
         $this->db->order_by('created_at', 'DESC');
         $this->db->like('tweets.tweet_text', $keyword);
         $res['data'] = $this->db->get('tweets')->result();
-
+		
+		if ( $keyword ) {
+            $this->db->where("tweets.tweet_text LIKE '%#".$keyword."%'");
+        }
         if ( $sentiment ) {
             $this->db->where('sentiment', $sentiment);
         }
         if ( $periode ) {
-            $this->db->where("tweets.created_at BETWEEN '" . $periode['end'] . "' AND '" . $periode['end'] . "'");
+            $this->db->where("tweets.created_at BETWEEN '" . $periode['start'] . "' AND '" . $periode['end'] . "'");
         }
+		
         $res['total'] = $this->db->get('tweets')->num_rows();
+
         return $res;
     }
 
