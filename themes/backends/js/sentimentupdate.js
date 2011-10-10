@@ -14,7 +14,7 @@ function callAjaxSentiment(id,sentiment) {
   } 
 	var url= siteUrl+'/tweet/post_sentiment/'+id+'/'+sentiment;
 	
-	xmlHttp.onreadystatechange=stateChanged 
+	xmlHttp.onreadystatechange=stateChanged
 	xmlHttp.open("GET",url,true)
 	xmlHttp.send(null)
 }
@@ -23,7 +23,7 @@ function callAjaxSentiment(id,sentiment) {
 function stateChanged(){ 
 	if (xmlHttp.readyState==4 || xmlHttp.readyState=="complete")
  	{ 
- 		window.location.reload();
+ 		window.location = window.location.href;
  	} 
 }
 
