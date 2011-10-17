@@ -18,8 +18,8 @@
                 <?php echo implode("&nbsp;&nbsp; &gt;&nbsp;&nbsp;", $breadcrumbs); ?>
             </div>
         <?php endif; ?>
-        
-		<form action="<?php echo site_url('tweet/index/'.$keyword_id) ?>" method="post" id="frm-tweep-statistic">
+
+        <form action="<?php echo site_url('tweet/index/' . $keyword_id) ?>" method="post" id="frm-tweep-statistic">
             <div style="padding:4px;">
                 <div style="float: left;width:280px;">
                     <label>Start:</label>
@@ -30,16 +30,16 @@
                     <input type="text" class="text tiny datepicker" name="end" value="<?php echo $end ?>"/>
                 </div>
                 <div style="float: left;">
-					<input type="hidden" name="keyword" value="<?php echo $keyword_string ?>" id="input-keyword"/>
+                    <input type="hidden" name="keyword" value="<?php echo $keyword_string ?>" id="input-keyword"/>
                     <input type="submit" class="submit small" name="view" id="btn-keyword-submit" value="View" />
                 </div>
                 <div style="clear:both;"></div>
             </div>
         </form>
-		<script>
-		$(".datepicker").datepicker({
-			dateFormat:'yy-mm-dd'
-		});
+        <script>
+            $(".datepicker").datepicker({
+                dateFormat:'yy-mm-dd'
+            });
         </script>
         <form>
             <!-- table -->
@@ -50,7 +50,7 @@
                         <th>Tweet</th>
                         <th>Followers</th>
                         <th>Sentiment</th>
-						<th colspan="4">Options</th>
+                        <th style="width:330px;text-align: right;">Sentiment Options</th>
                     </tr>
                 </thead>
 
@@ -67,18 +67,12 @@
                             </td>
                             <td><?php echo $r->followers_count ?></td>
                             <td><span class="sentiment-<?php echo $r->sentiment ?>"><?php echo sentiment($r->sentiment) ?></span></td>
-							<td>
-							<input class="submit small" type="button" name="minus" value="negatif" onclick="callAjaxSentiment('<?php echo $r->tweet_id ?>','m');" />
-							</td>
-							<td>
-							<input class="submit small" type="button" name="netral" value="netral" onclick="callAjaxSentiment('<?php echo $r->tweet_id ?>','n');" />
-							</td>
-							<td>
-							<input class="submit small" type="button" name="positif" value="positif" onclick="callAjaxSentiment('<?php echo $r->tweet_id ?>','p');" />
-							</td>
-							<td>
-							<input class="submit small" type="button" name="ask" value="ask" onclick="callAjaxSentiment('<?php echo $r->tweet_id ?>','a');" />
-							</td>
+                            <td style="width:330px;text-align: right;">
+                                <input class="buttonUI" type="button" name="minus" value="negatif" onclick="callAjaxSentiment('<?php echo $r->tweet_id ?>','m');" />
+                                <input class="buttonUI" type="button" name="netral" value="netral" onclick="callAjaxSentiment('<?php echo $r->tweet_id ?>','n');" />
+                                <input class="buttonUI" type="button" name="positif" value="positif" onclick="callAjaxSentiment('<?php echo $r->tweet_id ?>','p');" />
+                                <input class="buttonUI" type="button" name="ask" value="ask" onclick="callAjaxSentiment('<?php echo $r->tweet_id ?>','a');" />
+                            </td>
                         </tr>
                     <?php endforeach; ?>
 
