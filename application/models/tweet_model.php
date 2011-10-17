@@ -12,38 +12,39 @@ class Tweet_model extends CI_Model
 
     function get_tweet_by_keyword($keyword, $periode=array(), $paging=array(), $sentiment='')
     {
-        if ( $paging ) {
-            $paging['limit'] = isset($paging['limit']) ? $paging['limit'] : 25;
-            $paging['offset'] = isset($paging['offset']) ? $paging['offset'] : 0;
-            $this->db->limit($paging['limit'], $paging['offset']);
-        }
 
-		if ( $keyword ) {
-            $this->db->where("tweets.tweet_text LIKE '%#".$keyword."%'");
-        }
+        $param_query[] = $periode['start'];
+        $param_query[] = $periode['end'];
+        $this->db->where("tweets.created_at BETWEEN '" . $periode['start'] . "' AND '" . $periode['end'] . "'");
+
+        $sql_add_sentiment = '';
         if ( $sentiment ) {
             $this->db->where('sentiment', $sentiment);
-        }
-        if ( $periode ) {
-            $this->db->where("tweets.created_at BETWEEN '" . $periode['start'] . "' AND '" . $periode['end'] . "'");
+            $sql_add_sentiment = "AND tweets.sentiment = ?";
+            $param_query[] = $sentiment;
         }
 
-        $this->db->order_by('created_at', 'DESC');
-        $this->db->like('tweets.tweet_text', $keyword);
-        $res['data'] = $this->db->get('tweets')->result();
-		
-		if ( $keyword ) {
-            $this->db->where("tweets.tweet_text LIKE '%#".$keyword."%'");
-        }
-        if ( $sentiment ) {
-            $this->db->where('sentiment', $sentiment);
-        }
-        if ( $periode ) {
-            $this->db->where("tweets.created_at BETWEEN '" . $periode['start'] . "' AND '" . $periode['end'] . "'");
-        }
-		
-        $res['total'] = $this->db->get('tweets')->num_rows();
+        $paging['limit'] = isset($paging['limit']) ? $paging['limit'] : 25;
+        $paging['offset'] = isset($paging['offset']) ? $paging['offset'] : 0;
 
+        $sql = "
+        SELECT 
+        SQL_CALC_FOUND_ROWS *
+        FROM tweets 
+        WHERE 
+            tweets.tweet_text LIKE '%" . $keyword . "%'
+            AND tweets.created_at BETWEEN ? AND ?
+            $sql_add_sentiment
+        ORDER BY tweets.created_at DESC
+        LIMIT " . $paging['offset'] . "," . $paging['limit'] . "
+        ";
+
+        $data = $this->db->query($sql, $param_query)->result();
+        $total = $this->db->query('SELECT FOUND_ROWS() as total')->row();
+
+
+        $res['data'] = $data;
+        $res['total'] = $total->total;
         return $res;
     }
 
