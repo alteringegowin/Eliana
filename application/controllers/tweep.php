@@ -11,9 +11,6 @@ class Tweep extends CI_Controller
     protected $tpl;
     protected $profile;
 
-    /**
-     * @todo check kalo uri_segment 3 ga ada...
-     */
     function __construct()
     {
         parent::__construct();
@@ -26,7 +23,7 @@ class Tweep extends CI_Controller
         $this->tpl['content'] = '';
         $this->load->model('tweep_model', 'tweep');
         if ( !$this->uri->segment(3) ) {
-            //redirect('home/tweep');
+            
         }
         $this->tpl['breadcrumbs'][] = anchor('', 'Dashboard');
         $this->tpl['breadcrumbs'][] = anchor('account', 'Accounts');
@@ -41,7 +38,6 @@ class Tweep extends CI_Controller
         $account = $this->tweep->get_tweep($user_id);
         $acc = $this->tweep->get_tweep_status($user_id, $offset, $limit);
 
-
         $this->tpl['breadcrumbs'][] = anchor('tweep/index/' . $user_id, $account->screen_name);
         $this->tpl['breadcrumbs'][] = 'status';
 
@@ -51,13 +47,42 @@ class Tweep extends CI_Controller
         $this->load->view('body', $this->tpl);
     }
 
+    function download($user_id)
+    {
+        $start = $this->input->post('start', 1);
+        $end = $this->input->post('end', 1);
+        $mode = $this->input->post('mode', 1);
+
+        if ( $start && $end && $mode ) {
+            $this->load->dbutil();
+            $this->load->helper('download');
+            if ( $mode == 'tweet' ) {
+                $query = $this->tweep->get_user_tweet_by_periode($user_id, $start, $end, 'query');
+                $data = $this->dbutil->csv_from_result($query);
+                $name = $this->profile->screen_name . '_tweet_' . $start . '_' . $end . '.csv';
+            } else {
+                $query = $this->tweep->get_user_mentions_by_periode($user_id, $start, $end, 'query');
+                $data = $this->dbutil->csv_from_result($query);
+                $name = $this->profile->screen_name . '_mention_' . $start . '_' . $end . '.csv';
+            }
+            force_download($name, $data);
+        }
+
+
+        $account = $this->tweep->get_tweep($user_id);
+        $this->tpl['breadcrumbs'][] = anchor('tweep/index/' . $user_id, $account->screen_name);
+        $this->tpl['breadcrumbs'][] = 'Download Data';
+        $this->tpl['content'] = $this->load->view('tweep/download', $this->tpl, true);
+        $this->load->view('body', $this->tpl);
+    }
+
     function statistic($user_id)
     {
         $account = $this->tweep->get_tweep($user_id);
-        
+
         $this->tpl['breadcrumbs'][] = anchor('tweep/index/' . $user_id, $account->screen_name);
         $this->tpl['breadcrumbs'][] = 'statistic';
-        
+
         $this->tpl['user_id'] = $user_id;
         $this->tpl['styles'][] = 'css/wordcloud.css';
         $this->tpl['styles'][] = 'css/visualize.css';
@@ -71,10 +96,10 @@ class Tweep extends CI_Controller
     function mention($user_id='', $offset=0)
     {
         $account = $this->tweep->get_tweep($user_id);
-        
+
         $this->tpl['breadcrumbs'][] = anchor('tweep/index/' . $user_id, $account->screen_name);
         $this->tpl['breadcrumbs'][] = 'mention';
-        
+
         $limit = 10;
         $this->tpl['mention'] = $this->tweep->get_mention($user_id, $offset, $limit);
         $this->tpl['pagination'] = create_pagination('/tweep/mention/' . $user_id, $this->tpl['mention'] ['total'], $limit, 4);
@@ -85,7 +110,7 @@ class Tweep extends CI_Controller
     function user($user_id='')
     {
         $account = $this->tweep->get_tweep($user_id);
-        
+
         $this->tpl['breadcrumbs'][] = anchor('tweep/index/' . $user_id, $account->screen_name);
         $this->tpl['breadcrumbs'][] = 'mention';
         $mentions = $this->tweep->get_top_mention($user_id, 20);

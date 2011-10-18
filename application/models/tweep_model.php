@@ -2,17 +2,21 @@
 if ( !defined('BASEPATH') )
     exit('No direct script access allowed');
 
-class tweep_model extends CI_Model {
+class tweep_model extends CI_Model
+{
 
-    function __construct() {
+    function __construct()
+    {
         parent::__construct();
     }
 
-    function get_tweep($user_id) {
+    function get_tweep($user_id)
+    {
         return $this->db->get_where('tweet_follow', array('user_id' => $user_id))->row();
     }
 
-    function get_tweep_status($user_id, $offset, $limit) {
+    function get_tweep_status($user_id, $offset, $limit)
+    {
         $sql = "
         SELECT SQL_CALC_FOUND_ROWS * FROM tweets
         WHERE user_id = ?
@@ -26,7 +30,8 @@ class tweep_model extends CI_Model {
         return $r;
     }
 
-    function get_mention($user_id, $offset, $limit) {
+    function get_mention($user_id, $offset, $limit)
+    {
         $sql = "
         SELECT SQL_CALC_FOUND_ROWS * 
             
@@ -42,7 +47,8 @@ class tweep_model extends CI_Model {
         return $r;
     }
 
-    function get_top_mention($user_id, $limit=10) {
+    function get_top_mention($user_id, $limit=10)
+    {
         $sql = "
         SELECT 
             m.source_user_id,
@@ -59,10 +65,11 @@ class tweep_model extends CI_Model {
         ORDER BY total DESC
         LIMIT 10
         ";
-        return $this->db->query($sql, array($user_id,$user_id))->result();
+        return $this->db->query($sql, array($user_id, $user_id))->result();
     }
 
-    function get_top_mentioned($user_id, $limit=10) {
+    function get_top_mentioned($user_id, $limit=10)
+    {
         $sql = "
         SELECT 
             m.target_user_id,
@@ -82,14 +89,16 @@ class tweep_model extends CI_Model {
         ORDER BY total DESC
         LIMIT 10
         ";
-        return $this->db->query($sql, array($user_id,$user_id))->result();
+        return $this->db->query($sql, array($user_id, $user_id))->result();
     }
 
-    function get_tweet($tweet_id) {
+    function get_tweet($tweet_id)
+    {
         return $this->db->get_where('tweets', array('tweet_id' => $tweet_id))->row();
     }
 
-    function get_retweet($obj) {
+    function get_retweet($obj)
+    {
         $text = $obj->tweet_text;
         $screen_name = $obj->screen_name;
         $text = character_limiter($text, 30, '');
@@ -102,7 +111,8 @@ class tweep_model extends CI_Model {
         return $row;
     }
 
-    function count_total_rt_tweep($retweet_data) {
+    function count_total_rt_tweep($retweet_data)
+    {
         $total = 0;
         foreach ($retweet_data as $r) {
             $total += $r->followers_count;
@@ -110,7 +120,8 @@ class tweep_model extends CI_Model {
         return $total;
     }
 
-    function get_cloud_keyword($user_id, $start, $end) {
+    function get_cloud_keyword($user_id, $start, $end)
+    {
         $RT = $this->get_tweep($user_id);
         $sql = "
         SELECT 
@@ -136,7 +147,8 @@ class tweep_model extends CI_Model {
         return array_reverse($words);
     }
 
-    function process_words($text, $forbidden=array(), $min_length=4) {
+    function process_words($text, $forbidden=array(), $min_length=4)
+    {
         $index = array();
         $text = str_replace('RT', ' rt ', $text);
         $text = strtolower($text);
@@ -171,7 +183,8 @@ class tweep_model extends CI_Model {
             }
         }
 
-        function cmp($a, $b) {
+        function cmp($a, $b)
+        {
             return ($a['count'] > $b['count']) ? +1 : -1;
         }
 
@@ -183,11 +196,13 @@ class tweep_model extends CI_Model {
         }
     }
 
-    function get_reply_list($tweet_id) {
+    function get_reply_list($tweet_id)
+    {
         return $this->db->get_where('tweets', array('in_reply_to_status_id' => $tweet_id))->result();
     }
 
-    function get_growth($user_id, $start, $end) {
+    function get_growth($user_id, $start, $end)
+    {
         $sql = "
         SELECT 
             `user_id`,
@@ -205,7 +220,8 @@ class tweep_model extends CI_Model {
         return $stats;
     }
 
-    function count_retweet_per_tanggal($screen_name, $start, $end) {
+    function count_retweet_per_tanggal($screen_name, $start, $end)
+    {
 
         $RT = 'RT @' . $screen_name;
 
@@ -228,7 +244,8 @@ class tweep_model extends CI_Model {
         return $stats;
     }
 
-    function count_retweet($screen_name, $start, $end) {
+    function count_retweet($screen_name, $start, $end)
+    {
 
         $RT = 'RT @' . $screen_name;
 
@@ -256,7 +273,8 @@ class tweep_model extends CI_Model {
         return $stats;
     }
 
-    function count_mention($user_id,$start,$end) {
+    function count_mention($user_id, $start, $end)
+    {
         $sql = "
         SELECT 
             count(t.tweet_id) as mentions,
@@ -272,6 +290,59 @@ class tweep_model extends CI_Model {
         ";
         $stats = $this->db->query($sql, array($user_id, $start, $end))->row();
         return $stats;
+    }
+
+    function get_user_tweet_by_periode($user_id, $start, $end, $return='result')
+    {
+        if ( $return == 'query' ) {
+            $sql = "
+                SELECT t.created_at,t.screen_name,t.tweet_text,t.followers_count,t.sentiment
+                FROM tweets t
+                WHERE t.user_id = ?
+                    AND t.created_at BETWEEN ? AND ?
+                ORDER BY t.created_at DESC
+            ";
+            return $this->db->query($sql, array($user_id, $start, $end));
+        } else {
+            $sql = "
+                SELECT SQL_CALC_FOUND_ROWS * FROM tweets
+                WHERE user_id = ?
+                    AND created_at BETWEEN ? AND ?
+                ORDER BY created_at DESC
+            ";
+            $r['data'] = $this->db->query($sql, array($user_id, $start, $end))->result();
+            $total = $this->db->query('SELECT FOUND_ROWS() as total')->row();
+            $r['total'] = $total->total;
+            return $r;
+        }
+    }
+
+    function get_user_mentions_by_periode($user_id, $start, $end, $return='result')
+    {
+        if ( $return == 'query' ) {
+            $sql = "
+                SELECT t.created_at,t.screen_name,t.tweet_text,t.followers_count,t.sentiment
+                FROM tweet_mentions m 
+                    LEFT JOIN tweets t ON t.tweet_id=m.tweet_id
+                WHERE m.target_user_id= ?
+                    AND created_at BETWEEN ? AND ?
+                ORDER BY created_at DESC
+            ";
+            return $this->db->query($sql, array($user_id, $start, $end));
+        } else {
+            $sql = "
+                SELECT SQL_CALC_FOUND_ROWS * 
+                FROM tweet_mentions m 
+                    LEFT JOIN tweets t ON t.tweet_id=m.tweet_id
+                WHERE m.target_user_id= ?
+                    AND created_at BETWEEN ? AND ?
+                ORDER BY created_at DESC
+            ";
+            $r['data'] = $this->db->query($sql, array($user_id, $start, $end))->result();
+            $total = $this->db->query('SELECT FOUND_ROWS() as total')->row();
+            $r['total'] = $total->total;
+            return $r;
+        }
     }
 
 }
