@@ -409,4 +409,19 @@ class Ionauth extends Controller {
 		}
 	}
 
+	function post_group($id)
+	{
+		$user = $this->ion_auth->get_user($id);
+		print_r($user);
+		if($user->group_id==1)
+		{
+			$data = array('group_id'=>2);
+		}elseif($user->group_id==2)
+		{
+			$data = array('group_id'=>1);
+		}
+
+		$this->ion_auth->update_user($id, $data);
+	}
+
 }

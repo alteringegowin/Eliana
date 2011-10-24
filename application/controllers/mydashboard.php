@@ -165,10 +165,9 @@ class Mydashboard extends CI_Controller
         }
         //get user log list
         $this->tpl['latestupdate'] = $this->mydashboard->get_userlatestupdate($show, $iduser);
-
+		$this->tpl['javascripts'][] = 'js/sentimentupdate.js';
         $this->tpl['users'] = $this->ion_auth->get_users_array();
         $this->tpl['content'] = $this->load->view('mydashboard_user', $this->tpl, true);
         $this->load->view('body', $this->tpl);
     }
-
 }

@@ -19,6 +19,24 @@ function callAjaxSentiment(id,sentiment) {
 	xmlHttp.send(null)
 }
 
+function callAjaxGroup(id) {
+	
+	var siteUrl = $("meta[name=site_url]").attr('content');
+
+	if (id.length==0) { 
+  	return
+  } 
+	xmlHttp=GetXmlHttpObject()
+	if (xmlHttp==null) {
+  	alert ("Browser does not support HTTP Request")
+  	return
+  } 
+	var url= siteUrl+'/ionauth/post_group/'+id;
+	
+	xmlHttp.onreadystatechange=stateChanged
+	xmlHttp.open("GET",url,true)
+	xmlHttp.send(null)
+}
 
 function stateChanged(){ 
 	if (xmlHttp.readyState==4 || xmlHttp.readyState=="complete")

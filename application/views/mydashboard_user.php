@@ -14,21 +14,25 @@
 	<table id="sort-col2" cellpadding="0" cellspacing="0" width="100%">
         <thead>
 		<tr>
-			<th>Name</th>
+			<!--<th>Name</th>-->
 			<th>Username</th>
 			<th>Email</th>
 			<th>Group</th>
 			<th>Status</th>
+			<th>Group Option<th>
 		</tr>
 		</thead>
 		<tbody>
 		<?php foreach ($users as $user):?>
 			<tr>
-				<td><?php echo $user['first_name']?> <?php echo $user['last_name']?></td>
+				<!--<td><?php echo $user['first_name']?> <?php echo $user['last_name']?></td>-->
 				<td><?php echo $user['username']?></td>
 				<td><?php echo $user['email'];?></td>
 				<td><?php echo $user['group_description'];?></td>
 				<td><?php echo ($user['active']) ? anchor("ionauth/deactivate/".$user['id'], 'Active') : anchor("ionauth/activate/". $user['id'], 'Inactive');?></td>
+				<td>
+				<input class="buttonUI" type="button" name="change" value="Change" onclick="callAjaxGroup('<?php echo $user['id']; ?>');" />
+				</td>
 			</tr>
 		<?php endforeach;?>
 		</tbody>
