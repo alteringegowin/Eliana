@@ -13,7 +13,7 @@
         <form action="<?php echo current_url() ?>" method="post">
             <p>
                 <label>Username:</label> <br />
-                <input type="text" name="email" class="text" value="" />
+                <input type="text" name="username" class="text" value="" />
             </p>
 
             <p>

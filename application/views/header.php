@@ -8,8 +8,10 @@
         <li><a href="<?php echo site_url('') ?>">Dashboard</a></li>
         <li><a href="<?php echo site_url('account') ?>">Accounts</a></li>
         <li><a href="<?php echo site_url('keyword') ?>">Keywords</a></li>
-        <li><a href="<?php echo site_url('mydashboard') ?>">My Dashboard</a></li>
-        <?php if ( $this->session->userdata('group_id') == 1 ): ?>
+        <!--
+		<li><a href="<?php echo site_url('mydashboard') ?>">My Dashboard</a></li>
+        -->
+		<?php if ( $this->session->userdata('group_id') == 1 ): ?>
             <li><a href="<?php echo site_url('mydashboard/user') ?>">User</a></li>
             <li><a href="<?php echo site_url('engine') ?>">Engine</a></li>
         <?php endif; ?>

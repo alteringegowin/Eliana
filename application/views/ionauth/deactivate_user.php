@@ -1,7 +1,14 @@
+<div class="block center">
+    <div class="block_head">
+        <div class="bheadl"></div>
+        <div class="bheadr"></div>
+
+        <h2>Deactivate User</h2>
+    </div>
+    <div class="block_content">
+
 <div class='mainInfo'>
 
-	<div class="pageTitle">Deactivate User</div>
-    <div class="pageTitleBorder"></div>
 	<p>Are you sure you want to deactivate the user '<?php echo $user['username']; ?>'</p>
 	
     <?php echo form_open("ionauth/deactivate/".$user['id']);?>
@@ -20,4 +27,11 @@
 
     <?php echo form_close();?>
 
+</div>
+    </div>		
+    <!-- .block_content ends -->
+
+    <div class="bendl"></div>
+    <div class="bendr"></div>
+	
 </div>

@@ -5,8 +5,8 @@
 
         <h2>Dashboard</h2>
         <ul>
-            <li>Profile</li>
-            <li>Change Password</li>
+            <li><a href="<?php echo site_url('ionauth/change_password') ?>">Profile</a></li>
+			<li><a href="<?php echo site_url('ionauth/change_password') ?>">Change Password</a></li>
         </ul>
     </div>
     <div class="block_content">

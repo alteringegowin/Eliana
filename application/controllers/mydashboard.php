@@ -157,6 +157,15 @@ class Mydashboard extends CI_Controller
 
     function user()
     {
+		$iduser = $this->session->userdata('id');
+        if ( $this->ion_auth->is_admin() ) {
+            $show = 1;
+        } else {
+            $show = 0;
+        }
+        //get user log list
+        $this->tpl['latestupdate'] = $this->mydashboard->get_userlatestupdate($show, $iduser);
+
         $this->tpl['users'] = $this->ion_auth->get_users_array();
         $this->tpl['content'] = $this->load->view('mydashboard_user', $this->tpl, true);
         $this->load->view('body', $this->tpl);
