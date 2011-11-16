@@ -36,15 +36,10 @@ class Cli extends CI_Controller
         while (true) {
             // Process all new tweets
             $query = 'SELECT cache_id, raw_tweet ' .
-                'FROM json_cache WHERE NOT parsed';
+                'FROM json_cache WHERE NOT parsed LIMIT 100';
             $result = $this->db->query($query)->result_array();
             foreach ($result as $row) {
                 $cache_id = $row['cache_id'];
-
-                // Mark the tweet as having been parsed
-                $dbparsed['parsed'] = true;
-                $this->db->where('cache_id', $cache_id);
-                $this->db->update('json_cache', $dbparsed);
 
                 // Gather tweet data from the JSON object
                 // $oDB->escape() escapes ' and " characters, and blocks characters that
@@ -79,6 +74,7 @@ class Cli extends CI_Controller
                 }
 
 
+
                 $tweet_id = $tweet_object->id_str;
                 $ada = $this->db->get_where('tweets', array('tweet_id' => $tweet_id))->row();
                 if ( !$ada ) {
@@ -106,6 +102,12 @@ class Cli extends CI_Controller
                     $dbtweet['profile_image_url'] = $user_object->profile_image_url;
 
                     $this->db->insert('tweets', $dbtweet);
+                    
+                    
+		            // Mark the tweet as having been parsed
+		            $dbparsed['parsed'] = true;
+		            $this->db->where('cache_id', $cache_id);
+		            $this->db->update('json_cache', $dbparsed);
                 }
 
                 $entities = $tweet_object->entities;
@@ -130,7 +132,7 @@ class Cli extends CI_Controller
 
             // You can adjust the sleep interval to handle the tweet flow and 
             // server load you experience
-            sleep(30);
+            sleep(5);
         }
     }
 
@@ -140,6 +142,7 @@ class Cli extends CI_Controller
             $this->db->where('process', 'eliana_get_tweet');
             $r = $this->db->get('processes')->row();
             $output = array();
+            $output2 = array();
             if ( $r->pid ) {
                 $command = 'ps ' . $r->pid;
                 exec($command, $output);
@@ -161,6 +164,13 @@ class Cli extends CI_Controller
                 if ( $output ) {
                     $db['pid'] = $output;
                     $this->db->where('process', 'eliana_get_tweet');
+                    $this->db->update('processes', $db);
+                }
+                
+                $output = `php index.php cli eliana_process_tweet > /dev/null 2>&1 & echo $!`;
+                if ( $output2 ) {
+                    $db['pid'] = $output;
+                    $this->db->where('process', 'eliana_process_tweet');
                     $this->db->update('processes', $db);
                 }
                 sleep(10);
