@@ -110,7 +110,13 @@ class Ionauth extends Controller {
 				$iduser = $this->session->userdata('id');
 				$data = array('userid'=>$iduser, 'log_date'=>date('Y-m-d H:i:s'), 'action'=>'logged in');
 				$ok = $this->db->insert('logs',$data);
-                redirect('home');
+
+				if ( $this->ion_auth->is_admin() ) {
+					redirect('home');
+				} else {
+					redirect('keyword');
+				}
+                
             }				
 		}
 
@@ -321,8 +327,6 @@ class Ionauth extends Controller {
 		}
 
 		//validate form input
-		$this->form_validation->set_rules('first_name', 'First Name', 'required|xss_clean');
-		$this->form_validation->set_rules('last_name', 'Last Name', 'required|xss_clean');
 		$this->form_validation->set_rules('username', 'Username', 'required|xss_clean');
 		$this->form_validation->set_rules('email', 'Email Address', 'required|valid_email');
 		$this->form_validation->set_rules('password', 'Password', 'required|min_length[' . $this->config->item('min_password_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_password_length', 'ion_auth') . ']|matches[password_confirm]');
@@ -330,12 +334,11 @@ class Ionauth extends Controller {
 
 		if ($this->form_validation->run() == true)
 		{
-			$username = strtolower($this->input->post('first_name')) . ' ' . strtolower($this->input->post('last_name'));
+			$username = $this->input->post('username');
 			$email = $this->input->post('email');
 			$password = $this->input->post('password');
 
-			$additional_data = array('first_name' => $this->input->post('first_name'),
-				'last_name' => $this->input->post('last_name'),
+			$additional_data = array(
 				'group_id' => $this->input->post('group_id')
 			);
 		}
@@ -350,16 +353,6 @@ class Ionauth extends Controller {
 			//set the flash data error message if there is one
 			$this->data['message'] = (validation_errors() ? validation_errors() : ($this->ion_auth->errors() ? $this->ion_auth->errors() : $this->session->flashdata('message')));
 
-			$this->data['first_name'] = array('name' => 'first_name',
-				'id' => 'first_name',
-				'type' => 'text',
-				'value' => $this->form_validation->set_value('first_name'),
-			);
-			$this->data['last_name'] = array('name' => 'last_name',
-				'id' => 'last_name',
-				'type' => 'text',
-				'value' => $this->form_validation->set_value('last_name'),
-			);
 			$this->data['username'] = array('name' => 'username',
 				'id' => 'username',
 				'type' => 'text',
